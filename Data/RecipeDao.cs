@@ -41,9 +41,9 @@ namespace DataAccess
 				while (reader.Read())
 				{
 					var recipe = new Recipe();
-					recipe.Description = reader.GetString(2);
 					recipe.Name = reader.GetString(1);
 					recipe.Id = reader.GetInt32(0);
+					recipe.Description = reader.GetString(2);
 					recipes.Add(recipe);
 				}
 				reader.Close();
