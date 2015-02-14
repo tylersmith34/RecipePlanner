@@ -1,55 +1,101 @@
-﻿using Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain;
 
 namespace DataAccess
 {
 	public class RecipeDao
 	{
 		private static RecipeDao instance;
-		private SqlConnection connection;
 
 		public static RecipeDao getInstance()
 		{
 			if (instance == null)
 			{
 				instance = new RecipeDao();
-				instance.connection = DataSourceFactory.getInstance().getDefaultConnection();
 			}
 			return instance;
 		}
 
-		public IEnumerable<Recipe> FindAllRecipes()
+		private List<Tag> FindTagsForRecipe(int recipeId)
 		{
-			List<Recipe> recipes = new List<Recipe>();
-			String sql = "SELECT id, name, description FROM Recipe";
+			String sql = "SELECT T.Id, T.Name " +
+			" FROM RecipeTagS RT " +
+			" JOIN Tag T on RT.TagId = T.Id " +
+			" WHERE RT.RecipeId = @recipeId ";
 
-			if (connection.State == System.Data.ConnectionState.Closed)
+			List<Tag> tags = new List<Tag>();
+
+			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["LocalDatabase"].ConnectionString))
+			using (SqlCommand command = new SqlCommand(sql, connection))
 			{
 				connection.Open();
+				command.Parameters.Add("@recipeId", recipeId.ToString());
+				var reader = command.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						tags.Add(new Tag { Id = reader.GetInt32(0), Name = reader.GetString(1) });
+					}
+					reader.Close();
+				}
+			}
+			return tags;
+		}
+
+		public List<Recipe> FindAllRecipes()
+		{
+			String sql = "SELECT Id, Name, Description FROM Recipe";
+
+			List<Recipe> recipes = new List<Recipe>();
+
+			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["LocalDatabase"].ConnectionString))
+			using (SqlCommand command = new SqlCommand(sql, connection))
+			{
+				connection.Open();
+				var reader = command.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						recipes.Add(new Recipe { Id = reader.GetInt32(0), Name = reader.GetString(1), Description = reader.GetString(2) });
+					}
+					reader.Close();
+				}
 			}
 
-			SqlCommand command = new SqlCommand(sql, connection);
-			var reader = command.ExecuteReader();
-
-			if (reader.HasRows)
+			foreach (Recipe recipe in recipes)
 			{
-				while (reader.Read())
-				{
-					var recipe = new Recipe();
-					recipe.Name = reader.GetString(1);
-					recipe.Id = reader.GetInt32(0);
-					recipe.Description = reader.GetString(2);
-					recipes.Add(recipe);
-				}
-				reader.Close();
+				recipe.Tags = FindTagsForRecipe(recipe.Id);
 			}
 
 			return recipes;
+		}
+
+		public List<Tag> FindAllTags()
+		{
+			String sql = "SELECT Id, Name FROM Tag";
+
+			List<Tag> tags = new List<Tag>();
+
+			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["LocalDatabase"].ConnectionString))
+			using (SqlCommand command = new SqlCommand(sql, connection))
+			{
+				connection.Open();
+				var reader = command.ExecuteReader();
+				if (reader.HasRows)
+				{
+					while (reader.Read())
+					{
+						tags.Add(new Tag { Id = reader.GetInt32(0), Name = reader.GetString(1) });
+					}
+					reader.Close();
+				}
+			}
+			return tags;
 		}
 	}
 }

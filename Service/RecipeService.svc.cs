@@ -14,9 +14,14 @@ namespace Service
 	{
 		private RecipeDao _recipeDao = RecipeDao.getInstance();
 
-		public IEnumerable<Recipe> FindAllRecipes()
+		public IList<Recipe> FindAllRecipes()
 		{
 			return _recipeDao.FindAllRecipes();
+		}
+
+		public IList<Tag> FindAllTags()
+		{
+			return _recipeDao.FindAllTags();
 		}
 	}
 }

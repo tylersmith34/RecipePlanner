@@ -14,6 +14,11 @@ namespace Service
 	public interface IRecipeService
 	{
 		[OperationContract]
-		IEnumerable<Recipe> FindAllRecipes();
+		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "recipes")]
+		IList<Recipe> FindAllRecipes();
+
+		[OperationContract]
+		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "tags")]
+		IList<Tag> FindAllTags();
 	}
 }

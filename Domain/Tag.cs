@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class Recipe
-    {
+	public class Tag
+	{
 		public int Id { get; set; }
 		public String Name { get; set; }
-		public String Description { get; set; }
-		public List<Tag> Tags { get; set; }
-    }
+	}
 }
