@@ -5,27 +5,29 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var coffee = require('coffee-script').register();
-var routes = require('./routes/index');
-var recipes = require('./routes/recipes');
-var schedule = require('./routes/schedule');
 
 var app = express();
+
+require('./source/controller/home')(app);
+require('./source/controller/plan')(app);
+require('./source/controller/recipes')(app);
+require('./source/controller/schedule')(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/recipes', routes);
-app.use('/schedule', routes);
+// app.use('/', homeController);
+// app.use('/recipes', homeController);
+// app.use('/schedule', homeController);
+// app.use('/plan')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
