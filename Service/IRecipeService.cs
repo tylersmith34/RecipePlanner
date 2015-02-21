@@ -20,5 +20,9 @@ namespace Service
 		[OperationContract]
 		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "tags")]
 		IList<Tag> FindAllTags();
+
+		[OperationContract]
+		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "ping")]
+		String Ping();
 	}
 }

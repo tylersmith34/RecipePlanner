@@ -23,5 +23,10 @@ namespace Service
 		{
 			return _recipeDao.FindAllTags();
 		}
+
+		public String Ping()
+		{
+			return "Alive";
+		}
 	}
 }
