@@ -14,7 +14,7 @@ namespace Service
 	public interface IRecipeService
 	{
 		[OperationContract]
-		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "recipes")]
+		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "recipes")]
 		IList<Recipe> FindAllRecipes();
 
 		[OperationContract]
