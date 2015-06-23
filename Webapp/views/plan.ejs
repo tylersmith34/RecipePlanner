@@ -1,0 +1,42 @@
+<% include ../views/partials/header %>
+<script src="/generated/js/plan/plan-view-model.js"></script>
+<link href="/stylesheets/plan.css" rel="stylesheet" type="text/css">
+<div>
+  <h1>Meal Planning</h1>
+</div>
+<div class="container">
+  <span class="col-xs-2">
+    <h3>Tags
+      <span class="badge" data-bind="text: $root.numberOfUnselectedTags()"></span>
+    </h3>
+    <div class="list group" data-bind="foreach: $root.uniqueTags">
+      <span class="list-group-item clickable" data-bind="visible: $data.visible, text: $data.Name, click: function(){$root.selectTag($data)}"></span>
+    </div>
+  </span>
+  <span class="col-xs-8">
+    <div>
+      <div style="margin-top: 20px;">Filters</div>
+      <div class="no-results" data-bind="visible: $root.selectedTags().length === 0" style="margin-bottom: 10px;">No filters applied</div>
+      <div data-bind="foreach: $root.selectedTags">
+        <span class="selected-tag" data-bind="text: $data.Name, click: function(){$root.deselectTag($data)}"></span>
+      </div>
+    </div>
+  </span>
+<!-- <span class="col-xs-10">
+    <div style="margin-top: 20px; margin-bottom: 10px;">Search</div>
+  </span> -->
+  <span class="col-xs-8">
+    <h3>Results</h3>
+    <div class="no-results" data-bind="visible: $root.filteredRecipes().length === 0" style="margin-top: 20px; margin-bottom: 10px;">No results found</div>
+    <div class="list-group" data-bind="foreach: $root.filteredRecipes">
+      <div class="list-group-item clickable" data-bind="click: function(){$root.toggleRecipeDetails($data)}">
+        <p data-bind="text: $data.Name" style="font-weight: bold;"></p>
+        <p data-bind="visible: $data.expanded, text: $data.Description"></p>
+      </div>
+    </div>
+  </span>
+  <span class="col-xs-2">
+    <h3>Schedule</h3>
+  </span>
+</div>
+<% include ../views/partials/footer %>

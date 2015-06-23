@@ -18,11 +18,11 @@ namespace Service
 		IList<Recipe> FindAllRecipes();
 
 		[OperationContract]
-		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "tags")]
+		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "tags")]
 		IList<Tag> FindAllTags();
 
 		[OperationContract]
-		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Wrapped, UriTemplate = "ping")]
+		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "ping")]
 		String Ping();
 	}
 }

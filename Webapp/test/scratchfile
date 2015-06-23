@@ -1,0 +1,16 @@
+INSERT INTO Tag (name) VALUES ('Asian');
+INSERT INTO Tag (name) VALUES ('Bbeef');
+INSERT INTO Tag (name) VALUES ('Casserole');
+INSERT INTO Tag (name) VALUES ('Chicken');
+INSERT INTO Tag (name) VALUES ('Crock-pot');
+INSERT INTO Tag (name) VALUES ('Fish');
+INSERT INTO Tag (name) VALUES ('Grill');
+INSERT INTO Tag (name) VALUES ('Ham');
+INSERT INTO Tag (name) VALUES ('Italian');
+INSERT INTO Tag (name) VALUES ('Meatless');
+INSERT INTO Tag (name) VALUES ('Mexican');
+INSERT INTO Tag (name) VALUES ('Needs a side');
+INSERT INTO Tag (name) VALUES ('Pantry');
+INSERT INTO Tag (name) VALUES ('Pasta');
+INSERT INTO Tag (name) VALUES ('Rice');
+INSERT INTO Tag (name) VALUES ('Soup');
