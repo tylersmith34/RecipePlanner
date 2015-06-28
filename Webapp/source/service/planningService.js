@@ -1,17 +1,16 @@
 var http = require("http")
 var async = require("async")
+var environmentUtility = require('./../utility/environmentUtility')
 
 var recipeOptions = {
-  host: 'localhost',
-  port: 58864,
-  path: '/RecipeService.svc/recipes',
+  host: environmentUtility.findServiceEnvironment(),
+  path: environmentUtility.findUrlBaseForEnvironment() + '/RecipeService.svc/recipes',
   method: 'GET'
 };
 
 var tagOptions = {
-  host: 'localhost',
-  port: 58864,
-  path: '/RecipeService.svc/tags',
+  host: environmentUtility.findServiceEnvironment(),
+  path: environmentUtility.findUrlBaseForEnvironment() + '/RecipeService.svc/tags',
   method: 'GET'
 };
 
@@ -29,7 +28,7 @@ function loadAllRecipes(callback, callingRes) {
 }
 
 function loadAllTags(callback, callingRes) {
-  http.request(tagOptions, function(res) {
+  var req = http.request(tagOptions, function(res) {
     res.setEncoding('utf8');
     var tagsResponse = '';
     res.on('data', function(data) {
