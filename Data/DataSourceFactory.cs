@@ -18,7 +18,8 @@ namespace DataAccess
 			if (instance == null)
 			{
 				instance = new DataSourceFactory();
-				instance.conn = new SqlConnection(ConfigurationManager.ConnectionStrings["LocalDatabase"].ConnectionString);
+				var dataSourceEnv = Environment.GetEnvironmentVariable("DataSourceEnv");
+				instance.conn = new SqlConnection(ConfigurationManager.ConnectionStrings[dataSourceEnv].ConnectionString);
 			}
 			return instance;
 		}

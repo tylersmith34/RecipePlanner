@@ -19,6 +19,19 @@ namespace DataAccess
 			return instance;
 		}
 
+		private String FindDataSourceEnvironment()
+		{
+			var environment = Environment.GetEnvironmentVariable("DataSourceEnv", EnvironmentVariableTarget.Machine);
+			if (environment == null)
+			{
+				return "local";
+			}
+			else
+			{
+				return environment;
+			}
+		}
+
 		private List<Tag> FindTagsForRecipe(int recipeId)
 		{
 			String sql = "SELECT T.Id, T.Name " +
@@ -28,7 +41,7 @@ namespace DataAccess
 
 			List<Tag> tags = new List<Tag>();
 
-			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["LocalDatabase"].ConnectionString))
+			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[FindDataSourceEnvironment()].ConnectionString))
 			using (SqlCommand command = new SqlCommand(sql, connection))
 			{
 				connection.Open();
@@ -52,7 +65,7 @@ namespace DataAccess
 
 			List<Recipe> recipes = new List<Recipe>();
 
-			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["LocalDatabase"].ConnectionString))
+			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[FindDataSourceEnvironment()].ConnectionString))
 			using (SqlCommand command = new SqlCommand(sql, connection))
 			{
 				connection.Open();
@@ -81,7 +94,7 @@ namespace DataAccess
 
 			List<Tag> tags = new List<Tag>();
 
-			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["LocalDatabase"].ConnectionString))
+			using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[FindDataSourceEnvironment()].ConnectionString))
 			using (SqlCommand command = new SqlCommand(sql, connection))
 			{
 				connection.Open();
