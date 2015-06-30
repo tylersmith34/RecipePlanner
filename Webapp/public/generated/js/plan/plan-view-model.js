@@ -93,9 +93,17 @@
       this.toggleRecipeDetails = function(recipe) {
         return recipe.expanded(!recipe.expanded());
       };
-      this.resetFilters = function() {
-        return this.selectedTags.removeAll();
-      };
+      this.resetFilters = (function(_this) {
+        return function() {
+          var i, len, ref, tag;
+          ref = _this.uniqueTags();
+          for (i = 0, len = ref.length; i < len; i++) {
+            tag = ref[i];
+            tag.visible(true);
+          }
+          return _this.selectedTags.removeAll();
+        };
+      })(this);
     }
 
     return Plan;

@@ -46,7 +46,8 @@ class Recipes.Plan
     @toggleRecipeDetails = (recipe) ->
       recipe.expanded(!recipe.expanded())
 
-    @resetFilters = ->
+    @resetFilters = =>
+      tag.visible(true) for tag in @uniqueTags()
       @selectedTags.removeAll()
 $ ->
   _viewModel = new Recipes.Plan()
