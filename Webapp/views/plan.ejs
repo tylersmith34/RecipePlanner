@@ -15,7 +15,7 @@
   </span>
   <span class="col-xs-8">
     <div>
-      <div style="margin-top: 20px;">Filters</div>
+      <div style="margin-top: 20px;"><span>Filters</span><a style="padding-left: 10px;" href="#" data-bind="click: $root.resetFilters, visible: $root.selectedTags().length > 0">Reset</a></div>
       <div class="no-results" data-bind="visible: $root.selectedTags().length === 0" style="margin-bottom: 10px;">No filters applied</div>
       <div data-bind="foreach: $root.selectedTags">
         <span class="selected-tag" data-bind="text: $data.Name, click: function(){$root.deselectTag($data)}"></span>

@@ -93,6 +93,9 @@
       this.toggleRecipeDetails = function(recipe) {
         return recipe.expanded(!recipe.expanded());
       };
+      this.resetFilters = function() {
+        return this.selectedTags.removeAll();
+      };
     }
 
     return Plan;

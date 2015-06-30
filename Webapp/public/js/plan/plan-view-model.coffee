@@ -45,6 +45,9 @@ class Recipes.Plan
 
     @toggleRecipeDetails = (recipe) ->
       recipe.expanded(!recipe.expanded())
+
+    @resetFilters = ->
+      @selectedTags.removeAll()
 $ ->
   _viewModel = new Recipes.Plan()
   ko.applyBindings(_viewModel)
