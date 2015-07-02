@@ -31,7 +31,8 @@ class Recipes.Plan
         recipe.expanded = ko.observable(false) for recipe in recipeResponse
         @recipes(recipeResponse)
         $('.recipe').draggable({
-          appendTo: "body"
+          # containment: ".list-group"
+          # scroll: false
           })
       $.get "/plan/recipes/tags", (tagResponse) =>
         tag.visible = ko.observable(true) for tag in tagResponse
@@ -40,9 +41,11 @@ class Recipes.Plan
     _configureDroppables = ->
       $('.dayOfWeek').droppable({
         accept: '.recipe'
-        hoverClass: "ui-state-active"
-        drop: ->
-          alert(this)
+        hoverClass: "draggable-target"
+        activeClass: "ui-state-default",
+        # drop: ( event, ui ) ->
+        #   $( this )
+        #     .addClass( "ui-state-highlight" )
         })
 
     @selectTag = (tag) =>

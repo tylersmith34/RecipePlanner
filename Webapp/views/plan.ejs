@@ -15,7 +15,10 @@
   </span>
   <span class="col-xs-8">
     <div>
-      <div style="margin-top: 20px;"><span>Filters</span><a style="padding-left: 10px;" href="#" data-bind="click: $root.resetFilters, visible: $root.selectedTags().length > 0">Reset</a></div>
+      <div style="margin-top: 20px;">
+        <span>Filters</span>
+        <a data-bind="click: $root.resetFilters, visible: $root.selectedTags().length > 0" href="#" style="padding-left: 10px;">Reset</a>
+      </div>
       <div class="no-results" data-bind="visible: $root.selectedTags().length === 0" style="margin-bottom: 10px;">No filters applied</div>
       <div data-bind="foreach: $root.selectedTags">
         <span class="selected-tag" data-bind="text: $data.Name, click: function(){$root.deselectTag($data)}"></span>
@@ -32,34 +35,41 @@
     <div class="no-results" data-bind="visible: $root.filteredRecipes().length === 0" style="margin-top: 20px; margin-bottom: 10px;">No results found</div>
     <div class="list-group recipeList" data-bind="foreach: $root.filteredRecipes">
       <div class="list-group-item">
-        <span class="recipe" data-bind="text: $data.Name" style="font-weight: bold;"></span>
-        <p data-bind="visible: $data.expanded, text: $data.Description"></p>
-      </div>
+        <span class="recipe" data-bind="text: $data.Name, attr: {'data-id': $data.I}" style="font-weight: bold;"></span>
+        <p data-bind="visible: $data.expanded, text: $data.Description"/></div>
     </div>
   </span>
   <span class="col-xs-2">
-    <h3>Schedule</h3>
+    <h3>
+      Schedule</h3>
     <div class="list-group">
       <div class="list-group-item dayOfWeek">
-        <span>Sunday</span>
+        <span>
+          Sunday</span>
       </div>
       <div class="list-group-item dayOfWeek">
-        <span>Monday</span>
+        <span>
+          Monday</span>
       </div>
       <div class="list-group-item dayOfWeek">
-        <span>Tuesday</span>
+        <span>
+          Tuesday</span>
       </div>
       <div class="list-group-item dayOfWeek">
-        <span>Wednesday</span>
+        <span>
+          Wednesday</span>
       </div>
       <div class="list-group-item dayOfWeek">
-        <span>Thursday</span>
+        <span>
+          Thursday</span>
       </div>
       <div class="list-group-item dayOfWeek">
-        <span>Friday</span>
+        <span>
+          Friday</span>
       </div>
       <div class="list-group-item dayOfWeek">
-        <span>Saturday</span>
+        <span>
+          Saturday</span>
       </div>
     </div>
   </span>

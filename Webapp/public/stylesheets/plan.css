@@ -41,9 +41,18 @@
 
 .recipe {
   cursor:move;
+  z-index: 50;
 }
 
 .no-results {
   font-style: italic;
   color: gray;
+}
+
+.dayOfWeek {
+  margin: 5px;
+}
+
+.draggable-target {
+  border-color: rgb(248, 168, 3);
 }

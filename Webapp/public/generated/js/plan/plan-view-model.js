@@ -69,9 +69,7 @@
               recipe.expanded = ko.observable(false);
             }
             _this.recipes(recipeResponse);
-            return $('.recipe').draggable({
-              appendTo: "body"
-            });
+            return $('.recipe').draggable({});
           };
         })(this));
         return $.get("/plan/recipes/tags", (function(_this) {
@@ -88,10 +86,8 @@
       _configureDroppables = function() {
         return $('.dayOfWeek').droppable({
           accept: '.recipe',
-          hoverClass: "ui-state-active",
-          drop: function() {
-            return alert(this);
-          }
+          hoverClass: "draggable-target",
+          activeClass: "ui-state-default"
         });
       };
       this.selectTag = (function(_this) {
