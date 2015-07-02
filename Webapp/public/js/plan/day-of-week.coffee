@@ -1,5 +1,6 @@
 window.Recipes ?= {}
 
 class Recipes.DayOfWeek
-  constructor: ->
-    
+  constructor: (name) ->
+    @name = name
+    @plannedRecipes = ko.observableArray([])

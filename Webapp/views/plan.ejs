@@ -1,5 +1,7 @@
 <% include ../views/partials/header %>
 <script src="/generated/js/plan/plan-view-model.js"></script>
+<script src="/generated/js/plan/day-of-week.js"></script>
+
 <link href="/stylesheets/plan.css" rel="stylesheet" type="text/css">
 <div>
   <h1>Meal Planning</h1>
@@ -34,42 +36,17 @@
     </h3>
     <div class="no-results" data-bind="visible: $root.filteredRecipes().length === 0" style="margin-top: 20px; margin-bottom: 10px;">No results found</div>
     <div class="list-group recipeList" data-bind="foreach: $root.filteredRecipes">
-      <div class="list-group-item">
-        <span class="recipe" data-bind="text: $data.Name, attr: {'data-id': $data.I}" style="font-weight: bold;"></span>
+      <div class="list-group-item" data-bind="click: function(){$root.toggleRecipeDetails($data)}">
+        <span class="recipe" data-bind="text: $data.Name, attr: {'data-id': $data.Id}" style="font-weight: bold;"></span>
         <p data-bind="visible: $data.expanded, text: $data.Description"/></div>
     </div>
   </span>
   <span class="col-xs-2">
     <h3>
       Schedule</h3>
-    <div class="list-group">
+    <div class="list-group" data-bind="foreach: $root.daysOfWeek">
       <div class="list-group-item dayOfWeek">
-        <span>
-          Sunday</span>
-      </div>
-      <div class="list-group-item dayOfWeek">
-        <span>
-          Monday</span>
-      </div>
-      <div class="list-group-item dayOfWeek">
-        <span>
-          Tuesday</span>
-      </div>
-      <div class="list-group-item dayOfWeek">
-        <span>
-          Wednesday</span>
-      </div>
-      <div class="list-group-item dayOfWeek">
-        <span>
-          Thursday</span>
-      </div>
-      <div class="list-group-item dayOfWeek">
-        <span>
-          Friday</span>
-      </div>
-      <div class="list-group-item dayOfWeek">
-        <span>
-          Saturday</span>
+        <span data-bind="text: $data.name"></span>
       </div>
     </div>
   </span>

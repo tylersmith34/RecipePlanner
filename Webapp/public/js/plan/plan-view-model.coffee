@@ -6,6 +6,7 @@ class Recipes.Plan
     @recipes = ko.observableArray([])
     @uniqueTags = ko.observableArray([])
     @selectedTags = ko.observableArray([])
+    @daysOfWeek = ko.observableArray([])
     @numberOfUnselectedTags = ko.computed =>
       count = 0
       count++ for visible in @uniqueTags() when visible.visible() is true
@@ -27,6 +28,7 @@ class Recipes.Plan
 
     @load = ->
       _configureDroppables()
+      _configureDaysOfWeek()
       $.get "/plan/recipes", (recipeResponse) =>
         recipe.expanded = ko.observable(false) for recipe in recipeResponse
         @recipes(recipeResponse)
@@ -47,6 +49,15 @@ class Recipes.Plan
         #   $( this )
         #     .addClass( "ui-state-highlight" )
         })
+
+    _configureDaysOfWeek = =>
+      @daysOfWeek.push(new Recipes.DayOfWeek('Monday'))
+      @daysOfWeek.push(new Recipes.DayOfWeek('Tuesday'))
+      @daysOfWeek.push(new Recipes.DayOfWeek('Wednesday'))
+      @daysOfWeek.push(new Recipes.DayOfWeek('Thursday'))
+      @daysOfWeek.push(new Recipes.DayOfWeek('Friday'))
+      @daysOfWeek.push(new Recipes.DayOfWeek('Saturday'))
+      @daysOfWeek.push(new Recipes.DayOfWeek('Sunday'))
 
     @selectTag = (tag) =>
       @selectedTags.push(tag)

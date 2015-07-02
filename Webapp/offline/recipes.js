@@ -1,4 +1,6 @@
-[{
+var config = {}
+
+config.recipes = [{
   "Description": "Beef stew",
   "Id": 1,
   "Name": "Stew",
@@ -729,3 +731,5 @@
     "Name": "Chicken"
   }]
 }]
+
+module.exports = config;

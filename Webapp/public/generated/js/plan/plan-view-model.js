@@ -5,11 +5,12 @@
 
   Recipes.Plan = (function() {
     function Plan() {
-      var _configureDroppables, _tagWasSelected;
+      var _configureDaysOfWeek, _configureDroppables, _tagWasSelected;
       this.loading = ko.observable(false);
       this.recipes = ko.observableArray([]);
       this.uniqueTags = ko.observableArray([]);
       this.selectedTags = ko.observableArray([]);
+      this.daysOfWeek = ko.observableArray([]);
       this.numberOfUnselectedTags = ko.computed((function(_this) {
         return function() {
           var count, i, len, ref, visible;
@@ -61,6 +62,7 @@
       })(this));
       this.load = function() {
         _configureDroppables();
+        _configureDaysOfWeek();
         $.get("/plan/recipes", (function(_this) {
           return function(recipeResponse) {
             var i, len, recipe;
@@ -90,6 +92,17 @@
           activeClass: "ui-state-default"
         });
       };
+      _configureDaysOfWeek = (function(_this) {
+        return function() {
+          _this.daysOfWeek.push(new Recipes.DayOfWeek('Monday'));
+          _this.daysOfWeek.push(new Recipes.DayOfWeek('Tuesday'));
+          _this.daysOfWeek.push(new Recipes.DayOfWeek('Wednesday'));
+          _this.daysOfWeek.push(new Recipes.DayOfWeek('Thursday'));
+          _this.daysOfWeek.push(new Recipes.DayOfWeek('Friday'));
+          _this.daysOfWeek.push(new Recipes.DayOfWeek('Saturday'));
+          return _this.daysOfWeek.push(new Recipes.DayOfWeek('Sunday'));
+        };
+      })(this);
       this.selectTag = (function(_this) {
         return function(tag) {
           _this.selectedTags.push(tag);

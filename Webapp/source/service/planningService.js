@@ -1,43 +1,23 @@
-var http = require("http")
-var async = require("async")
-var environmentUtility = require('./../utility/environmentUtility')
-
-var recipeOptions = {
-  host: environmentUtility.findServiceEnvironment(),
-  path: environmentUtility.findUrlBaseForEnvironment() + '/RecipeService.svc/recipes',
-  method: 'GET'
-};
-
-var tagOptions = {
-  host: environmentUtility.findServiceEnvironment(),
-  path: environmentUtility.findUrlBaseForEnvironment() + '/RecipeService.svc/tags',
-  method: 'GET'
-};
+var planningDao = require('./../dao/planningDao')
+var offlineRecipes = require('./../../offline/recipes')
+var offlineTags = require('./../../offline/tags')
 
 function loadAllRecipes(callback, callingRes) {
-  http.request(recipeOptions, function(res) {
-    res.setEncoding('utf8');
-    var recipesResponse = '';
-    res.on('data', function(data) {
-      recipesResponse += data;
-    });
-    res.on('end', function() {
-      callback(JSON.parse(recipesResponse), callingRes);
-    });
-  }).end();
+  var offline = process.env.recipesOffline;
+  if (offline) {
+    callback(offlineRecipes.recipes, callingRes);
+  } else {
+    planningDao.loadAllRecipes(callback, callingRes);
+  }
 }
 
 function loadAllTags(callback, callingRes) {
-  var req = http.request(tagOptions, function(res) {
-    res.setEncoding('utf8');
-    var tagsResponse = '';
-    res.on('data', function(data) {
-      tagsResponse += data;
-    });
-    res.on('end', function() {
-      callback(JSON.parse(tagsResponse), callingRes);
-    });
-  }).end();
+  var offline = process.env.recipesOffline;
+  if (offline) {
+    callback(offlineTags.tags, callingRes);
+  } else {
+    planningDao.loadAllTags(callback, callingRes);
+  }
 }
 
 module.exports.loadAllRecipes = loadAllRecipes;

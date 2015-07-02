@@ -1,4 +1,6 @@
-[{
+var config = {}
+
+config.tags =[{
   "Id": 5,
   "Name": "Asian"
 }, {
@@ -50,3 +52,5 @@
   "Id": 20,
   "Name": "Soup"
 }]
+
+module.exports = config;
