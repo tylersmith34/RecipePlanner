@@ -11,29 +11,39 @@ class Recipes.Plan
       count++ for visible in @uniqueTags() when visible.visible() is true
       return count
 
-    @tagWasSelected = (tagToFind) =>
+    _tagWasSelected = (tagToFind) =>
       found = false
-      @selectedTags().forEach (tag) ->
-        if tag.Id == tagToFind.Id
-          found = true
+      found = true for tag in @selectedTags() when tag.Id == tagToFind.Id
       found
 
     @filteredRecipes = ko.computed =>
       recipes = []
       @recipes().forEach (recipe) =>
         numberOfMatches = 0
-        numberOfMatches++ for tag in recipe.Tags when @tagWasSelected(tag)
+        numberOfMatches++ for tag in recipe.Tags when _tagWasSelected(tag)
         if numberOfMatches is @selectedTags().length
           recipes.push(recipe)
       recipes
 
     @load = ->
+      _configureDroppables()
       $.get "/plan/recipes", (recipeResponse) =>
         recipe.expanded = ko.observable(false) for recipe in recipeResponse
         @recipes(recipeResponse)
+        $('.recipe').draggable({
+          appendTo: "body"
+          })
       $.get "/plan/recipes/tags", (tagResponse) =>
         tag.visible = ko.observable(true) for tag in tagResponse
         @uniqueTags(tagResponse)
+
+    _configureDroppables = ->
+      $('.dayOfWeek').droppable({
+        accept: '.recipe'
+        hoverClass: "ui-state-active"
+        drop: ->
+          alert(this)
+        })
 
     @selectTag = (tag) =>
       @selectedTags.push(tag)
@@ -49,6 +59,8 @@ class Recipes.Plan
     @resetFilters = =>
       tag.visible(true) for tag in @uniqueTags()
       @selectedTags.removeAll()
+
+
 $ ->
   _viewModel = new Recipes.Plan()
   ko.applyBindings(_viewModel)

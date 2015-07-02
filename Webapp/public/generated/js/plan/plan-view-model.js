@@ -5,6 +5,7 @@
 
   Recipes.Plan = (function() {
     function Plan() {
+      var _configureDroppables, _tagWasSelected;
       this.loading = ko.observable(false);
       this.recipes = ko.observableArray([]);
       this.uniqueTags = ko.observableArray([]);
@@ -23,15 +24,17 @@
           return count;
         };
       })(this));
-      this.tagWasSelected = (function(_this) {
+      _tagWasSelected = (function(_this) {
         return function(tagToFind) {
-          var found;
+          var found, i, len, ref, tag;
           found = false;
-          _this.selectedTags().forEach(function(tag) {
+          ref = _this.selectedTags();
+          for (i = 0, len = ref.length; i < len; i++) {
+            tag = ref[i];
             if (tag.Id === tagToFind.Id) {
-              return found = true;
+              found = true;
             }
-          });
+          }
           return found;
         };
       })(this);
@@ -45,7 +48,7 @@
             ref = recipe.Tags;
             for (i = 0, len = ref.length; i < len; i++) {
               tag = ref[i];
-              if (_this.tagWasSelected(tag)) {
+              if (_tagWasSelected(tag)) {
                 numberOfMatches++;
               }
             }
@@ -57,6 +60,7 @@
         };
       })(this));
       this.load = function() {
+        _configureDroppables();
         $.get("/plan/recipes", (function(_this) {
           return function(recipeResponse) {
             var i, len, recipe;
@@ -64,7 +68,10 @@
               recipe = recipeResponse[i];
               recipe.expanded = ko.observable(false);
             }
-            return _this.recipes(recipeResponse);
+            _this.recipes(recipeResponse);
+            return $('.recipe').draggable({
+              appendTo: "body"
+            });
           };
         })(this));
         return $.get("/plan/recipes/tags", (function(_this) {
@@ -77,6 +84,15 @@
             return _this.uniqueTags(tagResponse);
           };
         })(this));
+      };
+      _configureDroppables = function() {
+        return $('.dayOfWeek').droppable({
+          accept: '.recipe',
+          hoverClass: "ui-state-active",
+          drop: function() {
+            return alert(this);
+          }
+        });
       };
       this.selectTag = (function(_this) {
         return function(tag) {

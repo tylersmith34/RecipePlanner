@@ -30,15 +30,38 @@
       <span class="badge" data-bind="text: $root.filteredRecipes().length"></span>
     </h3>
     <div class="no-results" data-bind="visible: $root.filteredRecipes().length === 0" style="margin-top: 20px; margin-bottom: 10px;">No results found</div>
-    <div class="list-group" data-bind="foreach: $root.filteredRecipes">
-      <div class="list-group-item clickable" data-bind="click: function(){$root.toggleRecipeDetails($data)}">
-        <p data-bind="text: $data.Name" style="font-weight: bold;"></p>
+    <div class="list-group recipeList" data-bind="foreach: $root.filteredRecipes">
+      <div class="list-group-item">
+        <span class="recipe" data-bind="text: $data.Name" style="font-weight: bold;"></span>
         <p data-bind="visible: $data.expanded, text: $data.Description"></p>
       </div>
     </div>
   </span>
   <span class="col-xs-2">
     <h3>Schedule</h3>
+    <div class="list-group">
+      <div class="list-group-item dayOfWeek">
+        <span>Sunday</span>
+      </div>
+      <div class="list-group-item dayOfWeek">
+        <span>Monday</span>
+      </div>
+      <div class="list-group-item dayOfWeek">
+        <span>Tuesday</span>
+      </div>
+      <div class="list-group-item dayOfWeek">
+        <span>Wednesday</span>
+      </div>
+      <div class="list-group-item dayOfWeek">
+        <span>Thursday</span>
+      </div>
+      <div class="list-group-item dayOfWeek">
+        <span>Friday</span>
+      </div>
+      <div class="list-group-item dayOfWeek">
+        <span>Saturday</span>
+      </div>
+    </div>
   </span>
 </div>
 <% include ../views/partials/footer %>

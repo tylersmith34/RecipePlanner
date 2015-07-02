@@ -28,7 +28,6 @@
   font-size: 12px;
   font-weight: bold;
   color: black;
-  border-collapse: separate;
   border: 3px solid rgb(248, 168, 3);
   background-color: rgb(248, 168, 3);
   -webkit-border-radius: 15px;
@@ -38,6 +37,10 @@
 
 .clickable {
   cursor: pointer;
+}
+
+.recipe {
+  cursor:move;
 }
 
 .no-results {

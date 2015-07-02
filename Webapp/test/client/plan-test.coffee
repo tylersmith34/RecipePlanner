@@ -8,3 +8,5 @@ suite "Plan View Model Tests", ->
       test "load recipes", ->
         console.log "in test"
         expect(1).to.equal(2)
+      test "blah", ->
+        expect(1).to.equal(2)
