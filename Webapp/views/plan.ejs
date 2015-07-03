@@ -45,8 +45,8 @@
     <h3>
       Schedule</h3>
     <div class="list-group" data-bind="foreach: $root.daysOfWeek">
-      <div class="list-group-item dayOfWeek">
-        <span data-bind="text: $data.name"></span>
+      <div data-bind="id: $data.name, text: $data.name" class="list-group-item dayOfWeek">
+        
       </div>
     </div>
   </span>

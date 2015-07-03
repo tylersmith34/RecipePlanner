@@ -27,27 +27,31 @@ class Recipes.Plan
       recipes
 
     @load = ->
-      _configureDroppables()
       _configureDaysOfWeek()
+      _configureDroppables()
       $.get "/plan/recipes", (recipeResponse) =>
         recipe.expanded = ko.observable(false) for recipe in recipeResponse
         @recipes(recipeResponse)
-        $('.recipe').draggable({
-          # containment: ".list-group"
-          # scroll: false
-          })
+        _configureDraggables()
       $.get "/plan/recipes/tags", (tagResponse) =>
         tag.visible = ko.observable(true) for tag in tagResponse
         @uniqueTags(tagResponse)
+
+    _configureDraggables = =>
+      $('.recipe').draggable({
+        scroll: false
+        revert: "invalid"
+        })
 
     _configureDroppables = ->
       $('.dayOfWeek').droppable({
         accept: '.recipe'
         hoverClass: "draggable-target"
         activeClass: "ui-state-default",
-        # drop: ( event, ui ) ->
-        #   $( this )
-        #     .addClass( "ui-state-highlight" )
+        drop: ( event, ui ) ->
+          dataId = ui.draggable. draggable[0].attributes["data-id"].value
+          console.log dataId
+          $( this ).addClass( "ui-state-highlight" )
         })
 
     _configureDaysOfWeek = =>

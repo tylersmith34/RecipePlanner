@@ -5,7 +5,7 @@
 
   Recipes.Plan = (function() {
     function Plan() {
-      var _configureDaysOfWeek, _configureDroppables, _tagWasSelected;
+      var _configureDaysOfWeek, _configureDraggables, _configureDroppables, _tagWasSelected;
       this.loading = ko.observable(false);
       this.recipes = ko.observableArray([]);
       this.uniqueTags = ko.observableArray([]);
@@ -61,8 +61,8 @@
         };
       })(this));
       this.load = function() {
-        _configureDroppables();
         _configureDaysOfWeek();
+        _configureDroppables();
         $.get("/plan/recipes", (function(_this) {
           return function(recipeResponse) {
             var i, len, recipe;
@@ -71,7 +71,7 @@
               recipe.expanded = ko.observable(false);
             }
             _this.recipes(recipeResponse);
-            return $('.recipe').draggable({});
+            return _configureDraggables();
           };
         })(this));
         return $.get("/plan/recipes/tags", (function(_this) {
@@ -85,11 +85,25 @@
           };
         })(this));
       };
+      _configureDraggables = (function(_this) {
+        return function() {
+          return $('.recipe').draggable({
+            scroll: false,
+            revert: "invalid"
+          });
+        };
+      })(this);
       _configureDroppables = function() {
         return $('.dayOfWeek').droppable({
           accept: '.recipe',
           hoverClass: "draggable-target",
-          activeClass: "ui-state-default"
+          activeClass: "ui-state-default",
+          drop: function(event, ui) {
+            var dataId;
+            dataId = ui.draggable.draggable[0].attributes["data-id"].value;
+            console.log(dataId);
+            return $(this).addClass("ui-state-highlight");
+          }
         });
       };
       _configureDaysOfWeek = (function(_this) {
