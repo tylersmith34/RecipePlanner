@@ -15,7 +15,7 @@
       <span class="list-group-item clickable" data-bind="visible: $data.visible, text: $data.Name, click: function(){$root.selectTag($data)}"></span>
     </div>
   </span>
-  <span class="col-xs-8">
+  <span class="col-xs-7">
     <div>
       <div style="margin-top: 20px;">
         <span>Filters</span>
@@ -27,10 +27,10 @@
       </div>
     </div>
   </span>
-<!-- <span class="col-xs-10">
+<!-- <span class="col-xs-6">
     <div style="margin-top: 20px; margin-bottom: 10px;">Search</div>
   </span> -->
-  <span class="col-xs-8">
+  <span class="col-xs-6">
     <h3>Results
       <span class="badge" data-bind="text: $root.filteredRecipes().length"></span>
     </h3>
@@ -41,12 +41,21 @@
         <p data-bind="visible: $data.expanded, text: $data.Description"/></div>
     </div>
   </span>
-  <span class="col-xs-2">
+  <span class="col-xs-3">
     <h3>
-      Schedule</h3>
+      Schedule
+    </h3>
     <div class="list-group" data-bind="foreach: $root.daysOfWeek">
-      <div data-bind="id: $data.name, text: $data.name" class="list-group-item dayOfWeek">
-        
+      <div style="height: 100%;" data-bind="id: $data.name, attr: {'data-name': $data.name}" class="list-group-item dayOfWeek">
+        <div class="day-of-week-name" data-bind="text: $data.name"></div>
+        <div data-bind="foreach: $data.plannedRecipes">
+          <div class="planned-recipe-row">
+            <span class="pull-left planned-recipe-name" data-bind="text: $data.Name"></span>
+            <span class="glyphicon glyphicon-remove pull-right cancel-recipe"></span>
+            <span class="glyphicon glyphicon-arrow-up pull-right move-recipe"></span>
+            <span class="glyphicon glyphicon-arrow-down pull-right move-recipe"></span>
+          </pdiv
+        </div>
       </div>
     </div>
   </span>

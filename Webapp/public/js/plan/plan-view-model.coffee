@@ -22,7 +22,7 @@ class Recipes.Plan
       @recipes().forEach (recipe) =>
         numberOfMatches = 0
         numberOfMatches++ for tag in recipe.Tags when _tagWasSelected(tag)
-        if numberOfMatches is @selectedTags().length
+        if numberOfMatches is @selectedTags().length and recipe.planned() is not yes
           recipes.push(recipe)
       recipes
 
@@ -31,13 +31,14 @@ class Recipes.Plan
       _configureDroppables()
       $.get "/plan/recipes", (recipeResponse) =>
         recipe.expanded = ko.observable(false) for recipe in recipeResponse
+        recipe.planned = ko.observable(false) for recipe in recipeResponse
         @recipes(recipeResponse)
         _configureDraggables()
       $.get "/plan/recipes/tags", (tagResponse) =>
         tag.visible = ko.observable(true) for tag in tagResponse
         @uniqueTags(tagResponse)
 
-    _configureDraggables = =>
+    _configureDraggables = ->
       $('.recipe').draggable({
         scroll: false
         revert: "invalid"
@@ -49,10 +50,24 @@ class Recipes.Plan
         hoverClass: "draggable-target"
         activeClass: "ui-state-default",
         drop: ( event, ui ) ->
-          dataId = ui.draggable. draggable[0].attributes["data-id"].value
-          console.log dataId
-          $( this ).addClass( "ui-state-highlight" )
+          dayOfWeekName = $(this)[0].attributes["data-name"].value
+          dataId = ui.draggable[0].attributes["data-id"].value
+          foundDay = _findDayOfWeekByName(dayOfWeekName)
+          foundRecipe = _findRecipeById(dataId)
+          foundRecipe.planned(true)
+          foundDay.plannedRecipes.push(foundRecipe)
+          # $( this ).addClass( "ui-state-highlight" )
         })
+
+    _findRecipeById = (id) =>
+      recipeToFind
+      idAsInt = parseInt(id)
+      recipeToFind = recipe for recipe in @recipes() when recipe.Id is idAsInt
+      recipeToFind
+
+    _findDayOfWeekByName = (name) =>
+      day = dayOfWeek for dayOfWeek in @daysOfWeek() when dayOfWeek.name is name
+      day
 
     _configureDaysOfWeek = =>
       @daysOfWeek.push(new Recipes.DayOfWeek('Monday'))
