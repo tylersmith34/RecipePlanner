@@ -45,15 +45,15 @@
     <h3>
       Schedule
     </h3>
-    <div class="list-group" data-bind="foreach: $root.daysOfWeek">
-      <div style="height: 100%;" data-bind="id: $data.name, attr: {'data-name': $data.name}" class="list-group-item dayOfWeek">
-        <div class="day-of-week-name" data-bind="text: $data.name"></div>
-        <div data-bind="foreach: $data.plannedRecipes">
+    <div class="list-group" data-bind="foreach: {data: $root.daysOfWeek, as: 'day'} ">
+      <div style="height: 100%;" data-bind="id: day.name, attr: {'data-name': day.name}" class="list-group-item dayOfWeek">
+        <div class="day-of-week-name" data-bind="text: day.name"></div>
+        <div data-bind="foreach: {data: day.plannedRecipes, as: 'plannedRecipe' }">
           <div class="planned-recipe-row">
-            <span class="pull-left planned-recipe-name" data-bind="text: $data.Name"></span>
-            <span class="glyphicon glyphicon-remove pull-right cancel-recipe"></span>
-            <span class="glyphicon glyphicon-arrow-up pull-right move-recipe"></span>
-            <span class="glyphicon glyphicon-arrow-down pull-right move-recipe"></span>
+            <span class="pull-left planned-recipe-name" data-bind="text: plannedRecipe.Name"></span>
+            <span class="glyphicon glyphicon-remove pull-right cancel-recipe" data-bind="click: function(){$root.cancelRecipe(day, plannedRecipe)}"></span>
+            <span class="glyphicon glyphicon-arrow-up pull-right move-recipe" data-bind="visible: day.allowRecipeToMoveUp, click: function(){$root.moveRecipeToPreviousDay(day, plannedRecipe)}"></span>
+            <span class="glyphicon glyphicon-arrow-down pull-right move-recipe" data-bind="visible: day.allowRecipeToMoveDown, click: function(){$root.moveRecipeToNextDay(day, plannedRecipe)}"></span>
           </pdiv
         </div>
       </div>
