@@ -41,7 +41,7 @@
         <p data-bind="visible: $data.expanded, text: $data.Description"/></div>
     </div>
   </span>
-  <span class="col-xs-3">
+  <span class="col-xs-4">
     <h3>
       Schedule
     </h3>
@@ -52,8 +52,8 @@
           <div class="planned-recipe-row">
             <span class="pull-left planned-recipe-name" data-bind="text: plannedRecipe.Name"></span>
             <span class="glyphicon glyphicon-remove pull-right cancel-recipe" data-bind="click: function(){$root.cancelRecipe(day, plannedRecipe)}"></span>
-            <span class="glyphicon glyphicon-arrow-up pull-right move-recipe" data-bind="visible: day.allowRecipeToMoveUp, click: function(){$root.moveRecipeToPreviousDay(day, plannedRecipe)}"></span>
             <span class="glyphicon glyphicon-arrow-down pull-right move-recipe" data-bind="visible: day.allowRecipeToMoveDown, click: function(){$root.moveRecipeToNextDay(day, plannedRecipe)}"></span>
+          <span class="glyphicon glyphicon-arrow-up pull-right move-recipe" data-bind="visible: day.allowRecipeToMoveUp, click: function(){$root.moveRecipeToPreviousDay(day, plannedRecipe)}"></span>
           </pdiv
         </div>
       </div>

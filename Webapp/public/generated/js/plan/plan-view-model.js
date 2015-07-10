@@ -195,13 +195,15 @@
       this.selectTag = (function(_this) {
         return function(tag) {
           _this.selectedTags.push(tag);
-          return tag.visible(false);
+          tag.visible(false);
+          return _configureDraggables();
         };
       })(this);
       this.deselectTag = (function(_this) {
         return function(tag) {
           _this.selectedTags.remove(tag);
-          return tag.visible(true);
+          tag.visible(true);
+          return _configureDraggables();
         };
       })(this);
       this.toggleRecipeDetails = function(recipe) {

@@ -104,10 +104,12 @@ class Recipes.Plan
     @selectTag = (tag) =>
       @selectedTags.push(tag)
       tag.visible(false)
+      _configureDraggables()
 
     @deselectTag = (tag) =>
       @selectedTags.remove(tag)
       tag.visible(true)
+      _configureDraggables()
 
     @toggleRecipeDetails = (recipe) ->
       recipe.expanded(!recipe.expanded())
