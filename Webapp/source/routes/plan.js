@@ -3,9 +3,8 @@ var router = express.Router()
 var planningService = require('./../service/planningService')
 
 router.get('/', function(req, res, next) {
-  res.render('plan', {
-    title: 'Express'
-  })
+  console.log("in plan.js")
+  res.render('plan', { activeView: 'plan' })
 })
 
 var recipeCallback = function(data, res) {
