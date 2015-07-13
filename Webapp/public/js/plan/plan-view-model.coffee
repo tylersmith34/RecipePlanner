@@ -121,5 +121,5 @@ class Recipes.Plan
 
 $ ->
   _viewModel = new Recipes.Plan()
-  ko.applyBindings(_viewModel)
+  ko.applyBindings( _viewModel)
   _viewModel.load()

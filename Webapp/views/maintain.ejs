@@ -1,0 +1,46 @@
+<% include ../views/partials/header %>
+<script src="/generated/js/maintain/maintain-view-model.js"></script>
+<link href="/stylesheets/maintain.css" rel="stylesheet" type="text/css">
+
+<ul class="nav nav-pills">
+  <li role="presentation" class="active"><a href="#">Recipes</a></li>
+  <li role="presentation"><a href="#">Tags</a></li>
+</ul>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Recipes</div>
+  <table class="table table-striped ">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody data-bind="foreach: {data: $root.recipes, as: 'recipe'}">
+      <tr>
+        <td><span data-bind="text: recipe.Name"></span></td>
+        <td><span data-bind="text: recipe.Description"></span></td>
+        <td><a href="#" data-bind="click: $root.editRecipe">Edit</a></td>
+      </tr>
+      <tr data-bind="visible: recipe.isEditing">
+        <td colspan="1">
+          <div class="form-group">
+            <div>
+              <label data-bind="attr: {'for': 'name' + $index()}">Name<label>
+              <input data-bind="value: recipe.Name, attr: {id: 'name' + $index() }" class="form-control name-field"></input>
+            </div>
+            <div>
+              <label data-bind="attr: {'for': 'description' + $index()}">Description<label>
+              <input data-bind="value: recipe.Description, attr: {id: 'description' + $index() }" class="form-control description-field"></input>
+            </div>
+          </div>
+        </td>
+        <td colspan="2">
+          <div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

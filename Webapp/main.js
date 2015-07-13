@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var homeRoute = require('./source/routes/index');
 var planRoute = require('./source/routes/plan');
+var maintainRoute = require('./source/routes/maintain');
 
 var app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', homeRoute);
 app.use('/plan', planRoute);
+app.use('/maintenance', maintainRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -40,6 +42,7 @@ if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
+      activeView: 'none',
       message: err.message,
       error: err
     });
@@ -51,8 +54,9 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
+    activeView: 'none',
     message: err.message,
-    error: {}
+    error: err
   });
 });
 
