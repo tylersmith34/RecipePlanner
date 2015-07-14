@@ -7,3 +7,11 @@
   width: 400px;
   margin: 5px;
 }
+
+.success {
+  background-color: lightgreen;
+}
+
+.error {
+  background-color: pink;
+}

@@ -21,18 +21,18 @@
       <tr>
         <td><span data-bind="text: recipe.Name"></span></td>
         <td><span data-bind="text: recipe.Description"></span></td>
-        <td><a href="#" data-bind="click: $root.editRecipe">Edit</a></td>
+        <td><a href="#" data-bind="click: function(){$root.editRecipe(recipe)}">Edit</a></td>
       </tr>
-      <tr data-bind="visible: recipe.isEditing">
+      <tr data-bind="visible: recipe.isEditing  ">
         <td colspan="1">
           <div class="form-group">
             <div>
               <label data-bind="attr: {'for': 'name' + $index()}">Name<label>
-              <input data-bind="value: recipe.Name, attr: {id: 'name' + $index() }" class="form-control name-field"></input>
+              <input data-bind="value: recipe.Name, css: {'success': recipe.updateNameStatus() === 200, 'error': recipe.updateNameStatus() === 400}, valueUpdate: 'input', attr: {id: 'name' + $index() }" class="form-control name-field"></input>
             </div>
             <div>
               <label data-bind="attr: {'for': 'description' + $index()}">Description<label>
-              <input data-bind="value: recipe.Description, attr: {id: 'description' + $index() }" class="form-control description-field"></input>
+              <input type="text" data-bind="value: recipe.Description, css: {'success': recipe.updateDescriptionStatus() === 200, 'error': recipe.updateDescriptionStatus() === 400}, attr: {id: 'description' + $index() }" class="form-control description-field"></input>
             </div>
           </div>
         </td>
