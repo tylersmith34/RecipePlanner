@@ -1,20 +1,23 @@
 <% include ../views/partials/header %>
 <script src="/generated/js/maintain/maintain-view-model.js"></script>
 <link href="/stylesheets/maintain.css" rel="stylesheet" type="text/css">
+<link href="/stylesheets/plan.css" rel="stylesheet" type="text/css">
 
 <ul class="nav nav-pills">
-  <li role="presentation" class="active"><a href="#">Recipes</a></li>
-  <li role="presentation"><a href="#">Tags</a></li>
+  <li role="presentation" class="active"><a href="#recipesMaintenance">Recipes</a></li>
+  <li role="presentation"><a href="#tagsMaintenance">Tags</a></li>
 </ul>
 
-<div class="panel panel-default">
-  <div class="panel-heading">Recipes</div>
+<div id="tagsMaintenance" class="tab-content">
+</div>
+
+<div id="recipesMaintenance" class="tab tab-content panel panel-default">
   <table class="table table-striped ">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th></th>
+        <th style="width: 45%;">Name</th>
+        <th style="width: 50%;">Description</th>
+        <th style="width: 5%;"></th>
       </tr>
     </thead>
     <tbody data-bind="foreach: {data: $root.recipes, as: 'recipe'}">
@@ -23,8 +26,8 @@
         <td><span data-bind="text: recipe.Description"></span></td>
         <td><a href="#" data-bind="click: function(){$root.editRecipe(recipe)}">Edit</a></td>
       </tr>
-      <tr data-bind="visible: recipe.isEditing  ">
-        <td colspan="1">
+      <tr data-bind="visible: recipe.isEditing">
+        <td colspan="1>
           <div class="form-group">
             <div>
               <label data-bind="attr: {'for': 'name' + $index()}">Name<label>
@@ -37,7 +40,8 @@
           </div>
         </td>
         <td colspan="2">
-          <div>
+          <div data-bind="foreach: {data: recipe.Tags, as: 'tag'}">
+            <span class="selected-tag" data-bind="text: tag.Name, click: function(){$root.removeTagFromRecipe(recipe, tag)}"></span>
           </div>
         </td>
       </tr>

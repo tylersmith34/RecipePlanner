@@ -5,7 +5,7 @@
 
   Recipes.Maintain = (function() {
     function Maintain() {
-      var _updateRecipeDescription, _updateRecipeName;
+      var _processRecipePutResponse, _updateRecipeDescription, _updateRecipeName;
       this.recipes = ko.observableArray([]);
       this.tags = ko.observableArray([]);
       this.inEditMode = ko.observable(false);
@@ -13,7 +13,7 @@
       this.load = function() {
         $.get("/plan/recipes", (function(_this) {
           return function(recipeResponse) {
-            var i, j, k, l, len, len1, len2, len3, len4, m, recipe;
+            var i, j, k, l, len, len1, len2, len3, len4, len5, m, n, recipe;
             for (i = 0, len = recipeResponse.length; i < len; i++) {
               recipe = recipeResponse[i];
               recipe.isEditing = ko.observable(false);
@@ -32,6 +32,10 @@
             }
             for (m = 0, len4 = recipeResponse.length; m < len4; m++) {
               recipe = recipeResponse[m];
+              recipe.updateTagStatus = ko.observable(0);
+            }
+            for (n = 0, len5 = recipeResponse.length; n < len5; n++) {
+              recipe = recipeResponse[n];
               recipe.Description = ko.observable(recipe.Description);
             }
             return _this.recipes(recipeResponse);
@@ -43,28 +47,39 @@
           };
         })(this));
       };
-      this.editRecipe = (function(_this) {
-        return function(recipe) {
-          recipe.isEditing(!recipe.isEditing());
-          recipe.Description.subscribe(function(newValue) {
-            return _updateRecipeDescription(recipe);
-          });
-          return recipe.Name.subscribe(function() {
-            return _updateRecipeName(recipe);
-          });
-        };
-      })(this);
+      this.editRecipe = function(recipe) {
+        recipe.isEditing(!recipe.isEditing());
+        recipe.Description.subscribe(function(newValue) {
+          return _updateRecipeDescription(recipe);
+        });
+        return recipe.Name.subscribe(function() {
+          return _updateRecipeName(recipe);
+        });
+      };
+      this.removeTagFromRecipe = function(recipe, tag) {
+        return $.ajax({
+          type: 'DELETE',
+          url: "/maintain/recipe/" + recipe.Id + "/" + tag.Id + "}",
+          success: function(data, textStatus, jqXHR) {
+            console.log("in success to remove a tag");
+            _processRecipePutResponse(jqXHR, recipe.updateTagStatus);
+            return recipe.Tags.remove(tag);
+          },
+          error: function(jqXHR) {
+            return _processRecipePutResponse(jqXHR, recipe.updateTagStatus);
+          }
+        });
+      };
       _updateRecipeName = function(recipe) {
         recipe.updateNameStatus(0);
         return $.ajax({
           type: 'PUT',
           url: "/maintain/recipe/" + recipe.Id + "/{Name: '" + (recipe.Name()) + "'}",
           success: function(data, textStatus, jqXHR) {
-            console.log(jqXHR);
-            recipe.updateNameStatus(jqXHR.status);
-            setTimeout((function() {
-              recipe.updateNameStatus(0);
-            }), 1000);
+            return _processRecipePutResponse(jqXHR, recipe.updateNameStatus);
+          },
+          error: function(jqXHR) {
+            return _processRecipePutResponse(jqXHR, recipe.updateNameStatus);
           }
         });
       };
@@ -74,13 +89,18 @@
           type: 'PUT',
           url: "/maintain/recipe/" + recipe.Id + "/{Description: '" + (recipe.Description()) + "'}",
           success: function(data, textStatus, jqXHR) {
-            console.log(jqXHR);
-            recipe.updateDescriptionStatus(jqXHR.status);
-            setTimeout((function() {
-              recipe.updateDescriptionStatus(0);
-            }), 1000);
+            return _processRecipePutResponse(jqXHR, recipe.updateDescriptionStatus);
+          },
+          error: function(jqXHR) {
+            return _processRecipePutResponse(jqXHR, recipe.updateDescriptionStatus);
           }
         });
+      };
+      _processRecipePutResponse = function(jqXHR, field) {
+        field(jqXHR.status);
+        setTimeout((function() {
+          field(0);
+        }), 1000);
       };
     }
 

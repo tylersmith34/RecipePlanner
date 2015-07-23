@@ -23,9 +23,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', homeRoute);
 app.use('/plan', planRoute);
-app.use('/maintenance', maintainRoute);
+app.use('/maintain', maintainRoute);
 
 app.put('/maintain/recipe/:id/:data', maintainRoute);
+app.delete('/maintain/recipe/:id/:tagId', maintainRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
