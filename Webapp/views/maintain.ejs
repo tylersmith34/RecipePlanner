@@ -1,50 +1,78 @@
 <% include ../views/partials/header %>
-<script src="/generated/js/maintain/maintain-view-model.js"></script>
 <link href="/stylesheets/maintain.css" rel="stylesheet" type="text/css">
 <link href="/stylesheets/plan.css" rel="stylesheet" type="text/css">
 
-<ul class="nav nav-pills">
-  <li role="presentation" class="active"><a href="#recipesMaintenance">Recipes</a></li>
-  <li role="presentation"><a href="#tagsMaintenance">Tags</a></li>
+<ul class="nav nav-pills" role="tablist">
+  <li role="presentation" class="active"><a href="#recipesMaintenance" role="tag" data-toggle="tab">Recipes</a></li>
+  <li role="presentation"><a href="#tagsMaintenance" role="tag" data-toggle="tab">Tags</a></li>
 </ul>
 
-<div id="tagsMaintenance" class="tab-content">
+<div class="tab-content">
+    <div id="tagsMaintenance" class="tab-pane" role="tabpanel">
+    </div>
+
+    <div id="recipesMaintenance" class="tab tab-pane active panel-default" role="tabpanel">
+        <div class="panel-body">
+            <table class="table table-striped ">
+                <thead>
+                    <tr>
+                        <th style="width: 45%;">Name</th>
+                        <th style="width: 50%;">Description</th>
+                        <th style="width: 5%;"></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: {data: $root.recipes, as: 'recipe'}">
+                    <tr>
+                        <td><span data-bind="text: recipe.Name"></span></td>
+                        <td><span data-bind="text: recipe.Description"></span></td>
+                        <td><a href="#" data-bind="click: function(){$root.editRecipe(recipe)}">Edit</a></td>
+                    </tr>
+                    <tr data-bind="visible: recipe.isEditing">
+                        <td colspan="1>
+                            <div class="form-group">
+                            <div>
+                                <label data-bind="attr: {'for': 'name' + $index()}">Name<label>
+                                <input data-bind="value: recipe.Name, css: {'success': recipe.updateNameStatus() === 200, 'error': recipe.updateNameStatus() === 400}, valueUpdate: 'input', attr: {id: 'name' + $index() }" class="form-control name-field"></input>
+                            </div>
+                            <div>
+                                <label data-bind="attr: {'for': 'description' + $index()}">Description<label>
+                                <input type="text" data-bind="value: recipe.Description, css: {'success': recipe.updateDescriptionStatus() === 200, 'error': recipe.updateDescriptionStatus() === 400}, attr: {id: 'description' + $index() }" class="form-control description-field"></input>
+                            </div>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <div>
+                                <label>Tags</label>
+                                <span style="margin-left: 25px;"><a href="#" data-toggle="modal" data-target="#recipeTagsModal" data-bind="click: function(){$root.showTagModalForRecipe(recipe)}">Add tags</a><span>
+                                <div data-bind="foreach: {data: recipe.Tags, as: 'tag'}">
+                                    <span class="selected-tag" data-bind="text: tag.Name, click: function(){$root.removeTagFromRecipe(recipe, tag)}"></span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<div id="recipesMaintenance" class="tab tab-content panel panel-default">
-  <table class="table table-striped ">
-    <thead>
-      <tr>
-        <th style="width: 45%;">Name</th>
-        <th style="width: 50%;">Description</th>
-        <th style="width: 5%;"></th>
-      </tr>
-    </thead>
-    <tbody data-bind="foreach: {data: $root.recipes, as: 'recipe'}">
-      <tr>
-        <td><span data-bind="text: recipe.Name"></span></td>
-        <td><span data-bind="text: recipe.Description"></span></td>
-        <td><a href="#" data-bind="click: function(){$root.editRecipe(recipe)}">Edit</a></td>
-      </tr>
-      <tr data-bind="visible: recipe.isEditing">
-        <td colspan="1>
-          <div class="form-group">
-            <div>
-              <label data-bind="attr: {'for': 'name' + $index()}">Name<label>
-              <input data-bind="value: recipe.Name, css: {'success': recipe.updateNameStatus() === 200, 'error': recipe.updateNameStatus() === 400}, valueUpdate: 'input', attr: {id: 'name' + $index() }" class="form-control name-field"></input>
-            </div>
-            <div>
-              <label data-bind="attr: {'for': 'description' + $index()}">Description<label>
-              <input type="text" data-bind="value: recipe.Description, css: {'success': recipe.updateDescriptionStatus() === 200, 'error': recipe.updateDescriptionStatus() === 400}, attr: {id: 'description' + $index() }" class="form-control description-field"></input>
-            </div>
-          </div>
-        </td>
-        <td colspan="2">
-          <div data-bind="foreach: {data: recipe.Tags, as: 'tag'}">
-            <span class="selected-tag" data-bind="text: tag.Name, click: function(){$root.removeTagFromRecipe(recipe, tag)}"></span>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="modal fade" id="recipeTagsModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Tags</h4>
+      </div>
+      <div class="modal-body">
+        <div class="list-group" data-bind="foreach: {data: $root.tags, as: 'tag'}">
+            <a href="#" class="list-group-item" data-bind="visible: tag.visible, text: tag.Name, css: {'active': tag.selected}, click: function(){$root.selectTagForRecipe(tag)}"></a>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script src="/generated/js/maintain/maintain-view-model.js"></script>

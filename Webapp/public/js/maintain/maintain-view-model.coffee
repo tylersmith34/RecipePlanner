@@ -15,8 +15,11 @@ class Recipes.Maintain
         recipe.updateDescriptionStatus = ko.observable(0) for recipe in recipeResponse
         recipe.updateTagStatus = ko.observable(0) for recipe in recipeResponse
         recipe.Description = ko.observable(recipe.Description) for recipe in recipeResponse
+        recipe.Tags = ko.observableArray(recipe.Tags) for recipe in recipeResponse
         @recipes(recipeResponse)
       $.get "/plan/recipes/tags", (tagResponse) =>
+        tag.selected = ko.observable(no) for tag in tagResponse
+        tag.visible = ko.observable(yes) for tag in tagResponse
         @tags(tagResponse)
 
     @editRecipe = (recipe) ->
@@ -26,16 +29,30 @@ class Recipes.Maintain
       recipe.Name.subscribe () ->
         _updateRecipeName(recipe)
 
+    _findIndexOfTag = (id, tags) ->
+        tags.map((e) ->
+          e.Id
+        ).indexOf id
+
     @removeTagFromRecipe = (recipe, tag) ->
       $.ajax
         type: 'DELETE'
         url: "/maintain/recipe/#{recipe.Id}/#{tag.Id}}"
         success: (data, textStatus, jqXHR) ->
-          console.log "in success to remove a tag"
           _processRecipePutResponse(jqXHR, recipe.updateTagStatus)
-          recipe.Tags.remove(tag)
-        error:  (jqXHR) ->
+          recipe.Tags.splice(_findIndexOfTag(tag.Id, recipe.Tags()), 1)
+        error: (jqXHR) ->
           _processRecipePutResponse(jqXHR, recipe.updateTagStatus)
+
+    @showTagModalForRecipe = (recipe) =>
+      @recipeUnderEdit(recipe)
+      tag.visible(yes) for tag in @tags()
+      for selectedTag in recipe.Tags()
+        tag.visible(no) for tag in @tags() when selectedTag.Id is tag.Id
+
+    @selectTagForRecipe = (tag) =>
+      @recipeUnderEdit().Tags.push(tag)
+      tag.visible(no)
 
     _updateRecipeName = (recipe) ->
       recipe.updateNameStatus(0)
