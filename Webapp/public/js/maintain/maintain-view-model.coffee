@@ -1,11 +1,18 @@
 window.Recipes ?= {}
 
+class Recipe
+  constructor: (@name, @description) ->
+    @Name = ko.observable(@name)
+    @Description = ko.observable(@description)
+    @Tags = ko.observableArray()
+
 class Recipes.Maintain
   constructor: () ->
     @recipes = ko.observableArray([])
     @tags = ko.observableArray([])
     @inEditMode = ko.observable(false)
     @recipeUnderEdit = ko.observable({})
+    @recipeToAdd = new Recipe()
 
     @load = ->
       $.get "/plan/recipes", (recipeResponse) =>
@@ -18,7 +25,6 @@ class Recipes.Maintain
         recipe.Tags = ko.observableArray(recipe.Tags) for recipe in recipeResponse
         @recipes(recipeResponse)
       $.get "/plan/recipes/tags", (tagResponse) =>
-        tag.selected = ko.observable(no) for tag in tagResponse
         tag.visible = ko.observable(yes) for tag in tagResponse
         @tags(tagResponse)
 
@@ -44,14 +50,33 @@ class Recipes.Maintain
         error: (jqXHR) ->
           _processRecipePutResponse(jqXHR, recipe.updateTagStatus)
 
+    @removeTagFromNewRecipe = (tag) ->
+      @recipeToAdd.Tags.splice(_findIndexOfTag(tag.Id, @recipeToAdd.Tags()), 1)
+      tag.visible(yes)
+
+    @areTagsAvailable = ko.computed =>
+        count = 0
+        count++ for tag in @tags() when tag.visible() is yes
+        return count > 0
+
     @showTagModalForRecipe = (recipe) =>
       @recipeUnderEdit(recipe)
       tag.visible(yes) for tag in @tags()
       for selectedTag in recipe.Tags()
         tag.visible(no) for tag in @tags() when selectedTag.Id is tag.Id
 
-    @selectTagForRecipe = (tag) =>
+    @selectTagForExistingRecipe = (tag) =>
       @recipeUnderEdit().Tags.push(tag)
+      tag.visible(no)
+
+    @cancelAddingNewRecipe = =>
+      tag.visible(yes) for tag in @tags()
+      @recipeToAdd.Name('')
+      @recipeToAdd.Description('')
+      @recipeToAdd.Tags.removeAll()
+
+    @selectTagForNewRecipe = (tag) =>
+      @recipeToAdd.Tags.push(tag)
       tag.visible(no)
 
     _updateRecipeName = (recipe) ->

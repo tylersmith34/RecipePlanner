@@ -1,7 +1,22 @@
 (function() {
+  var Recipe;
+
   if (window.Recipes == null) {
     window.Recipes = {};
   }
+
+  Recipe = (function() {
+    function Recipe(name, description) {
+      this.name = name;
+      this.description = description;
+      this.Name = ko.observable(this.name);
+      this.Description = ko.observable(this.description);
+      this.Tags = ko.observableArray();
+    }
+
+    return Recipe;
+
+  })();
 
   Recipes.Maintain = (function() {
     function Maintain() {
@@ -10,6 +25,7 @@
       this.tags = ko.observableArray([]);
       this.inEditMode = ko.observable(false);
       this.recipeUnderEdit = ko.observable({});
+      this.recipeToAdd = new Recipe();
       this.load = function() {
         $.get("/plan/recipes", (function(_this) {
           return function(recipeResponse) {
@@ -47,13 +63,9 @@
         })(this));
         return $.get("/plan/recipes/tags", (function(_this) {
           return function(tagResponse) {
-            var i, j, len, len1, tag;
+            var i, len, tag;
             for (i = 0, len = tagResponse.length; i < len; i++) {
               tag = tagResponse[i];
-              tag.selected = ko.observable(false);
-            }
-            for (j = 0, len1 = tagResponse.length; j < len1; j++) {
-              tag = tagResponse[j];
               tag.visible = ko.observable(true);
             }
             return _this.tags(tagResponse);
@@ -87,6 +99,24 @@
           }
         });
       };
+      this.removeTagFromNewRecipe = function(tag) {
+        this.recipeToAdd.Tags.splice(_findIndexOfTag(tag.Id, this.recipeToAdd.Tags()), 1);
+        return tag.visible(true);
+      };
+      this.areTagsAvailable = ko.computed((function(_this) {
+        return function() {
+          var count, i, len, ref, tag;
+          count = 0;
+          ref = _this.tags();
+          for (i = 0, len = ref.length; i < len; i++) {
+            tag = ref[i];
+            if (tag.visible() === true) {
+              count++;
+            }
+          }
+          return count > 0;
+        };
+      })(this));
       this.showTagModalForRecipe = (function(_this) {
         return function(recipe) {
           var i, j, len, len1, ref, ref1, results, selectedTag, tag;
@@ -116,9 +146,28 @@
           return results;
         };
       })(this);
-      this.selectTagForRecipe = (function(_this) {
+      this.selectTagForExistingRecipe = (function(_this) {
         return function(tag) {
           _this.recipeUnderEdit().Tags.push(tag);
+          return tag.visible(false);
+        };
+      })(this);
+      this.cancelAddingNewRecipe = (function(_this) {
+        return function() {
+          var i, len, ref, tag;
+          ref = _this.tags();
+          for (i = 0, len = ref.length; i < len; i++) {
+            tag = ref[i];
+            tag.visible(true);
+          }
+          _this.recipeToAdd.Name('');
+          _this.recipeToAdd.Description('');
+          return _this.recipeToAdd.Tags.removeAll();
+        };
+      })(this);
+      this.selectTagForNewRecipe = (function(_this) {
+        return function(tag) {
+          _this.recipeToAdd.Tags.push(tag);
           return tag.visible(false);
         };
       })(this);

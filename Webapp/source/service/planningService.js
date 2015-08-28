@@ -3,8 +3,7 @@ var offlineRecipes = require('./../../offline/recipes')
 var offlineTags = require('./../../offline/tags')
 
 function loadAllRecipes(callback, callingRes) {
-  var offline = process.env.recipesOffline;
-  if (true) {
+  if (process.env.recipesOffline) {
     callback(offlineRecipes.recipes, callingRes);
   } else {
     planningDao.loadAllRecipes(callback, callingRes);
@@ -12,8 +11,7 @@ function loadAllRecipes(callback, callingRes) {
 }
 
 function loadAllTags(callback, callingRes) {
-  var offline = process.env.recipesOffline;
-  if (true) {
+  if (process.env.recipesOffline) {
     callback(offlineTags.tags, callingRes);
   } else {
     planningDao.loadAllTags(callback, callingRes);
