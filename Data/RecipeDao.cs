@@ -110,5 +110,27 @@ namespace DataAccess
 			}
 			return tags;
 		}
+
+		public virtual void UpdateRecipeName(int id, string newValue)
+		{
+			String sql = "UPDATE Recipe Set Name = @newValue WHERE Id = @recipeId ";
+
+			List<Tag> tags = new List<Tag>();
+
+			//using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[FindDataSourceEnvironment()].ConnectionString))
+			//using (SqlCommand command = new SqlCommand(sql, connection))
+			//{
+			//	connection.Open();
+			//	command.Parameters.Add("@newValue", newValue);
+			//	command.Parameters.Add("@recipeId", id);
+
+			//	command.Execute();
+			//}
+		}
+
+		public virtual void UpdateRecipeDescription(int id, string newValue)
+		{
+
+		}
 	}
 }

@@ -1,13 +1,10 @@
 var config = {}
+var conString = "postgres://recipes:" + process.env.db_password + "@recipespostgres.c2xfgvgbz8hi.us-west-2.rds.amazonaws.com:5432/Recipe";
 
-config.service = {
-  "prod": "smith-recipe-planner.elasticbeanstalk.com",
-  "local": "localhost"
-}
-
-config.urlBase = {
-  "prod": "",
-  "local": "/Recipes"
+config.database = {
+    "local": "postgres://recipes:" + process.env.db_password + "@recipespostgres.c2xfgvgbz8hi.us-west-2.rds.amazonaws.com:5432/Recipe",
+    "prod": "postgres://recipes:" + process.env.db_password + "@recipespostgres.c2xfgvgbz8hi.us-west-2.rds.amazonaws.com:5432/Recipe"
 }
 
 module.exports = config;
+module.exports.conString = conString;

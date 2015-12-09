@@ -1,9 +1,9 @@
 var express = require('express')
 var router = express.Router()
 var planningService = require('./../service/planningService')
+var environments = require('../config/environments')
 
 router.get('/', function(req, res, next) {
-  console.log("in plan.js")
   res.render('plan', { activeView: 'plan' })
 })
 
@@ -17,6 +17,11 @@ router.get('/recipes', function(req, res, next) {
 
 router.get('/recipes/tags', function(req, res, next) {
   planningService.loadAllTags(recipeCallback, res)
+})
+
+router.get('/conn', function(req, res, next) {
+    console.log(environments.conString)
+  recipeCallback(environments.conString, res);
 })
 
 module.exports = router

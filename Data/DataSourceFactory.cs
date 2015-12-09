@@ -13,20 +13,20 @@ namespace DataAccess
 		private static DataSourceFactory instance;
 		private SqlConnection conn;
 
-		public static DataSourceFactory getInstance()
-		{
-			if (instance == null)
-			{
-				instance = new DataSourceFactory();
-				var dataSourceEnv = Environment.GetEnvironmentVariable("DataSourceEnv");
-				instance.conn = new SqlConnection(ConfigurationManager.ConnectionStrings[dataSourceEnv].ConnectionString);
-			}
-			return instance;
-		}
+		//public static DataSourceFactory getInstance()
+		//{
+		//	if (instance == null)
+		//	{
+		//		instance = new DataSourceFactory();
+		//		var dataSourceEnv = Environment.GetEnvironmentVariable("DataSourceEnv");
+		//		instance.conn = new SqlConnection(ConfigurationManager.ConnectionStrings[dataSourceEnv].ConnectionString);
+		//	}
+		//	return instance;
+		//}
 
-		public SqlConnection getDefaultConnection()
-		{
-			return conn;
-		}
+		//public SqlConnection getDefaultConnection()
+		//{
+		//	return conn;
+		//}
 	}
 }

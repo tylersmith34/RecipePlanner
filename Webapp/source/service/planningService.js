@@ -1,4 +1,5 @@
-var planningDao = require('./../dao/planningDao')
+var tagDao = require('./../dao/tagDao')
+var recipeDao = require('./../dao/recipeDao')
 var offlineRecipes = require('./../../offline/recipes')
 var offlineTags = require('./../../offline/tags')
 
@@ -6,7 +7,7 @@ function loadAllRecipes(callback, callingRes) {
   if (process.env.recipesOffline) {
     callback(offlineRecipes.recipes, callingRes);
   } else {
-    planningDao.loadAllRecipes(callback, callingRes);
+    recipeDao.loadAllRecipes(callback, callingRes);
   }
 }
 
@@ -14,7 +15,7 @@ function loadAllTags(callback, callingRes) {
   if (process.env.recipesOffline) {
     callback(offlineTags.tags, callingRes);
   } else {
-    planningDao.loadAllTags(callback, callingRes);
+    tagDao.loadTags(callback, callingRes);
   }
 }
 

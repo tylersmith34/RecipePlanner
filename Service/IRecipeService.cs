@@ -7,6 +7,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using Domain;
 using DataAccess;
+using System.Net;
 
 namespace Service
 {
@@ -24,5 +25,9 @@ namespace Service
 		[OperationContract]
 		[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "ping")]
 		String Ping();
+
+		[OperationContract]
+		[WebInvoke(Method = "PUT", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare, UriTemplate = "recipes/{id}/{data}")]
+		HttpStatusCode UpdateRecipe(int id, string data);
 	}
 }
