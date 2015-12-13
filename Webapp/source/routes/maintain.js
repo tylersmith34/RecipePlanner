@@ -1,23 +1,44 @@
 var express = require('express')
 var router = express.Router()
 var planningService = require('./../service/planningService')
+var tagDao = require('./../dao/tagDao')
+var recipeDao = require('./../dao/recipeDao')
 
 router.get('/', function(req, res, next) {
   res.render('maintain', { activeView: 'maintain' })
 })
 
-router.put('/maintain/recipe/:id/:data', function(req, res, next) {
-  console.log("in put for /maintain/recipe " + req.params.id + " data: " + decodeURI(req.params.data))
-  res.status(200).send("success")
+router.put('/maintain/recipe/:id/name/:data', function(req, res) {
+  var data = req.params.data
+  if(data === 'null') {
+    statusCallback(400, 'The name cannot be empty', res)
+  } else {
+    recipeDao.updateName(req.params.id, data, statusCallback, res);
+  }
 })
 
-router.delete('/maintain/recipe/:id/:tagId', function(req, res, next) {
-  console.log("in put for /maintain/recipe " + req.params.id + " tagId: " + decodeURI(req.params.tagId))
-  res.status(200).send("success")
+router.put('/maintain/recipe/:id/descr/:data', function(req, res) {
+  var data = req.params.data
+  if(data === 'null'){
+    data = ''
+  }
+  recipeDao.updateDescription(req.params.id, data, statusCallback, res);
+})
+
+router.post('/maintain/recipe/:id/:tagId', function(req, res) {
+    tagDao.addTagToRecipe(req.params.tagId, req.params.id, statusCallback, res);
+})
+
+router.delete('/maintain/recipe/:id/:tagId', function(req, res) {
+     tagDao.removeTagFromRecipe(req.params.tagId, req.params.id, statusCallback, res);
 })
 
 var recipeCallback = function(data, res) {
   res.json(data)
+}
+
+var statusCallback = function(statusCode, message, res) {
+    res.status(statusCode).send(message)
 }
 
 module.exports = router

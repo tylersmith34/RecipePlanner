@@ -6,9 +6,9 @@
   }
 
   Recipe = (function() {
-    function Recipe(name, description) {
-      this.name = name;
-      this.description = description;
+    function Recipe(name1, description1) {
+      this.name = name1;
+      this.description = description1;
       this.Name = ko.observable(this.name);
       this.Description = ko.observable(this.description);
       this.Tags = ko.observableArray();
@@ -26,10 +26,11 @@
       this.inEditMode = ko.observable(false);
       this.recipeUnderEdit = ko.observable({});
       this.recipeToAdd = new Recipe();
+      this.revertingNameValue = ko.observable(false);
       this.load = function() {
         $.get("/plan/recipes", (function(_this) {
           return function(recipeResponse) {
-            var i, j, k, l, len, len1, len2, len3, len4, len5, len6, m, n, o, recipe;
+            var i, j, k, l, len, len1, len2, len3, len4, len5, len6, len7, m, n, o, p, recipe;
             for (i = 0, len = recipeResponse.length; i < len; i++) {
               recipe = recipeResponse[i];
               recipe.isEditing = ko.observable(false);
@@ -40,22 +41,26 @@
             }
             for (k = 0, len2 = recipeResponse.length; k < len2; k++) {
               recipe = recipeResponse[k];
-              recipe.updateNameStatus = ko.observable(0);
+              recipe.oldName = ko.observable(recipe.Name());
             }
             for (l = 0, len3 = recipeResponse.length; l < len3; l++) {
               recipe = recipeResponse[l];
-              recipe.updateDescriptionStatus = ko.observable(0);
+              recipe.updateNameStatus = ko.observable(0);
             }
             for (m = 0, len4 = recipeResponse.length; m < len4; m++) {
               recipe = recipeResponse[m];
-              recipe.updateTagStatus = ko.observable(0);
+              recipe.updateDescriptionStatus = ko.observable(0);
             }
             for (n = 0, len5 = recipeResponse.length; n < len5; n++) {
               recipe = recipeResponse[n];
-              recipe.Description = ko.observable(recipe.Description);
+              recipe.updateTagStatus = ko.observable(0);
             }
             for (o = 0, len6 = recipeResponse.length; o < len6; o++) {
               recipe = recipeResponse[o];
+              recipe.Description = ko.observable(recipe.Description);
+            }
+            for (p = 0, len7 = recipeResponse.length; p < len7; p++) {
+              recipe = recipeResponse[p];
               recipe.Tags = ko.observableArray(recipe.Tags);
             }
             return _this.recipes(recipeResponse);
@@ -89,7 +94,7 @@
       this.removeTagFromRecipe = function(recipe, tag) {
         return $.ajax({
           type: 'DELETE',
-          url: "/maintain/recipe/" + recipe.Id + "/" + tag.Id + "}",
+          url: "/maintain/recipe/" + recipe.Id + "/" + tag.Id,
           success: function(data, textStatus, jqXHR) {
             _processRecipePutResponse(jqXHR, recipe.updateTagStatus);
             return recipe.Tags.splice(_findIndexOfTag(tag.Id, recipe.Tags()), 1);
@@ -149,7 +154,11 @@
       this.selectTagForExistingRecipe = (function(_this) {
         return function(tag) {
           _this.recipeUnderEdit().Tags.push(tag);
-          return tag.visible(false);
+          tag.visible(false);
+          return $.ajax({
+            type: 'post',
+            url: "/maintain/recipe/" + (_this.recipeUnderEdit().Id) + "/" + tag.Id
+          });
         };
       })(this);
       this.cancelAddingNewRecipe = (function(_this) {
@@ -171,24 +180,40 @@
           return tag.visible(false);
         };
       })(this);
-      _updateRecipeName = function(recipe) {
-        recipe.updateNameStatus(0);
-        return $.ajax({
-          type: 'PUT',
-          url: "/maintain/recipe/" + recipe.Id + "/{Name: '" + (recipe.Name()) + "'}",
-          success: function(data, textStatus, jqXHR) {
-            return _processRecipePutResponse(jqXHR, recipe.updateNameStatus);
-          },
-          error: function(jqXHR) {
-            return _processRecipePutResponse(jqXHR, recipe.updateNameStatus);
+      _updateRecipeName = (function(_this) {
+        return function(recipe) {
+          var name;
+          recipe.updateNameStatus(0);
+          if (_this.revertingNameValue() === false && recipe.Name() === !null) {
+            name = recipe.Name() ? recipe.Name() : null;
+            return $.ajax({
+              type: 'PUT',
+              url: "/maintain/recipe/" + recipe.Id + "/name/" + name,
+              success: function(data, textStatus, jqXHR) {
+                return _processRecipePutResponse(jqXHR, recipe.updateNameStatus);
+              },
+              error: function(jqXHR) {
+                recipe.Name(recipe.oldName());
+                return _processRecipePutResponse(jqXHR, recipe.updateNameStatus);
+              }
+            });
+          } else {
+            _this.revertingNameValue(true);
+            recipe.Name(recipe.oldName());
+            return _processRecipePutResponse({
+              status: 400
+            }, recipe.updateNameStatus);
           }
-        });
-      };
+        };
+      })(this);
+      this.revertingNameValue(false);
       _updateRecipeDescription = function(recipe) {
+        var description;
         recipe.updateDescriptionStatus(0);
+        description = recipe.Description() ? recipe.Description() : null;
         return $.ajax({
           type: 'PUT',
-          url: "/maintain/recipe/" + recipe.Id + "/{Description: '" + (recipe.Description()) + "'}",
+          url: "/maintain/recipe/" + recipe.Id + "/descr/" + description,
           success: function(data, textStatus, jqXHR) {
             return _processRecipePutResponse(jqXHR, recipe.updateDescriptionStatus);
           },
@@ -201,7 +226,7 @@
         field(jqXHR.status);
         setTimeout((function() {
           field(0);
-        }), 1000);
+        }), 5000);
       };
     }
 

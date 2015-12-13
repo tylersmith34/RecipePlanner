@@ -19,5 +19,18 @@ function loadAllTags(callback, callingRes) {
   }
 }
 
+function updateRecipe(id, data, callback, callingRes) {
+    console.log(data.Description)
+    console.log(data.Description !== undefined)
+    if(data.Description !== undefined ){
+        console.log("in update descr")
+        recipeDao.updateDescription(id, data, callback, callingRes);
+    }else if(data.Name !== undefined ){
+        console.log("in update name")
+        recipeDao.updateName(id, data, callback, callingRes);
+    }
+}
+
 module.exports.loadAllRecipes = loadAllRecipes;
 module.exports.loadAllTags = loadAllTags;
+module.exports.updateRecipe = updateRecipe;

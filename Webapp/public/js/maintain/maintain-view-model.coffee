@@ -13,11 +13,13 @@ class Recipes.Maintain
     @inEditMode = ko.observable(false)
     @recipeUnderEdit = ko.observable({})
     @recipeToAdd = new Recipe()
+    @revertingNameValue = ko.observable(no)
 
     @load = ->
       $.get "/plan/recipes", (recipeResponse) =>
         recipe.isEditing = ko.observable(false) for recipe in recipeResponse
         recipe.Name = ko.observable(recipe.Name) for recipe in recipeResponse
+        recipe.oldName = ko.observable(recipe.Name()) for recipe in recipeResponse
         recipe.updateNameStatus = ko.observable(0) for recipe in recipeResponse
         recipe.updateDescriptionStatus = ko.observable(0) for recipe in recipeResponse
         recipe.updateTagStatus = ko.observable(0) for recipe in recipeResponse
@@ -43,7 +45,7 @@ class Recipes.Maintain
     @removeTagFromRecipe = (recipe, tag) ->
       $.ajax
         type: 'DELETE'
-        url: "/maintain/recipe/#{recipe.Id}/#{tag.Id}}"
+        url: "/maintain/recipe/#{recipe.Id}/#{tag.Id}"
         success: (data, textStatus, jqXHR) ->
           _processRecipePutResponse(jqXHR, recipe.updateTagStatus)
           recipe.Tags.splice(_findIndexOfTag(tag.Id, recipe.Tags()), 1)
@@ -68,6 +70,9 @@ class Recipes.Maintain
     @selectTagForExistingRecipe = (tag) =>
       @recipeUnderEdit().Tags.push(tag)
       tag.visible(no)
+      $.ajax
+        type: 'post'
+        url: "/maintain/recipe/#{@recipeUnderEdit().Id}/#{tag.Id}"
 
     @cancelAddingNewRecipe = =>
       tag.visible(yes) for tag in @tags()
@@ -79,21 +84,30 @@ class Recipes.Maintain
       @recipeToAdd.Tags.push(tag)
       tag.visible(no)
 
-    _updateRecipeName = (recipe) ->
+    _updateRecipeName = (recipe) =>
       recipe.updateNameStatus(0)
-      $.ajax
-        type: 'PUT'
-        url: "/maintain/recipe/#{recipe.Id}/{Name: '#{recipe.Name()}'}"
-        success: (data, textStatus, jqXHR) ->
-          _processRecipePutResponse(jqXHR, recipe.updateNameStatus)
-        error:  (jqXHR) ->
-          _processRecipePutResponse(jqXHR, recipe.updateNameStatus)
+      if @revertingNameValue() is no and recipe.Name() is not null
+        name = if recipe.Name() then recipe.Name() else null
+        $.ajax
+          type: 'PUT'
+          url: "/maintain/recipe/#{recipe.Id}/name/#{name}"
+          success: (data, textStatus, jqXHR) ->
+            _processRecipePutResponse(jqXHR, recipe.updateNameStatus)
+          error:  (jqXHR) ->
+            recipe.Name(recipe.oldName())
+            _processRecipePutResponse(jqXHR, recipe.updateNameStatus)
+      else
+        @revertingNameValue(yes)
+        recipe.Name(recipe.oldName())
+        _processRecipePutResponse({status: 400}, recipe.updateNameStatus)
+    @revertingNameValue(no)
 
     _updateRecipeDescription = (recipe) ->
       recipe.updateDescriptionStatus(0)
+      description = if recipe.Description() then recipe.Description() else null
       $.ajax
         type: 'PUT'
-        url: "/maintain/recipe/#{recipe.Id}/{Description: '#{recipe.Description()}'}"
+        url: "/maintain/recipe/#{recipe.Id}/descr/#{description}"
         success: (data, textStatus, jqXHR) ->
           _processRecipePutResponse(jqXHR, recipe.updateDescriptionStatus)
         error:  (jqXHR) ->
@@ -104,7 +118,7 @@ class Recipes.Maintain
       setTimeout (->
         field(0)
         return
-      ), 1000
+      ), 5000
       return
 
 $ ->
