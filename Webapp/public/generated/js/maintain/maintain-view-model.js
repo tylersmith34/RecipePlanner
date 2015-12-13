@@ -184,7 +184,7 @@
         return function(recipe) {
           var name;
           recipe.updateNameStatus(0);
-          if (_this.revertingNameValue() === false && recipe.Name() === !null) {
+          if (_this.revertingNameValue() === false && recipe.Name() !== null) {
             name = recipe.Name() ? recipe.Name() : null;
             return $.ajax({
               type: 'PUT',

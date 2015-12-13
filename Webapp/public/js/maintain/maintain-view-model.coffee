@@ -13,7 +13,7 @@ class Recipes.Maintain
     @inEditMode = ko.observable(false)
     @recipeUnderEdit = ko.observable({})
     @recipeToAdd = new Recipe()
-    @revertingNameValue = ko.observable(no)
+    @revertingNameValue = ko.observable(false)
 
     @load = ->
       $.get "/plan/recipes", (recipeResponse) =>
@@ -86,7 +86,7 @@ class Recipes.Maintain
 
     _updateRecipeName = (recipe) =>
       recipe.updateNameStatus(0)
-      if @revertingNameValue() is no and recipe.Name() is not null
+      if @revertingNameValue() is no and recipe.Name() isnt null
         name = if recipe.Name() then recipe.Name() else null
         $.ajax
           type: 'PUT'
