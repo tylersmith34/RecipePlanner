@@ -27,7 +27,6 @@
       </div>
     </div>
   </span>
-<!-- <span class="col-xs-6">
     <div style="margin-top: 20px; margin-bottom: 10px;">Search</div>
   </span> -->
   <span class="col-xs-6">
@@ -36,9 +35,9 @@
     </h3>
     <div class="no-results" data-bind="visible: $root.filteredRecipes().length === 0" style="margin-top: 20px; margin-bottom: 10px;">No results found</div>
     <div class="list-group recipeList" data-bind="foreach: $root.filteredRecipes">
-      <div class="list-group-item" data-bind="click: function(){$root.toggleRecipeDetails($data)}">
-        <span class="recipe" data-bind="text: $data.Name, attr: {'data-id': $data.Id}" style="font-weight: bold;"></span>
-        <p data-bind="visible: $data.expanded, text: $data.Description"/></div>
+      <div class="list-group-item">
+        <p class="recipe" data-bind="text: $data.Name, attr: {'data-id': $data.Id}" style="font-weight: bold;"></p>
+      </div>
     </div>
   </span>
   <span class="col-xs-4">

@@ -28,6 +28,7 @@ app.use('/maintain', maintainRoute);
 app.put('/maintain/recipe/:id/descr/:data', maintainRoute);
 app.put('/maintain/recipe/:id/name/:data', maintainRoute);
 app.post('/maintain/recipe/:id/:tagId', maintainRoute);
+app.post('/maintain/new/recipe', maintainRoute);
 app.delete('/maintain/recipe/:id/:tagId', maintainRoute);
 
 // catch 404 and forward to error handler

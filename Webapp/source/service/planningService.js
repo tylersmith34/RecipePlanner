@@ -20,13 +20,9 @@ function loadAllTags(callback, callingRes) {
 }
 
 function updateRecipe(id, data, callback, callingRes) {
-    console.log(data.Description)
-    console.log(data.Description !== undefined)
-    if(data.Description !== undefined ){
-        console.log("in update descr")
+    if (data.Description !== undefined ) {
         recipeDao.updateDescription(id, data, callback, callingRes);
-    }else if(data.Name !== undefined ){
-        console.log("in update name")
+    } else if (data.Name !== undefined ) {
         recipeDao.updateName(id, data, callback, callingRes);
     }
 }

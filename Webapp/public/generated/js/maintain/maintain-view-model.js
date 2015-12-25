@@ -27,6 +27,7 @@
       this.recipeUnderEdit = ko.observable({});
       this.recipeToAdd = new Recipe();
       this.revertingNameValue = ko.observable(false);
+      this.errorMessage = ko.observable();
       this.load = function() {
         $.get("/plan/recipes", (function(_this) {
           return function(recipeResponse) {
@@ -178,6 +179,39 @@
         return function(tag) {
           _this.recipeToAdd.Tags.push(tag);
           return tag.visible(false);
+        };
+      })(this);
+      this.tagsForNewRecipe = ko.computed((function(_this) {
+        return function() {
+          var data, i, len, ref, tag;
+          data = [];
+          ref = _this.recipeToAdd.Tags();
+          for (i = 0, len = ref.length; i < len; i++) {
+            tag = ref[i];
+            data.push(tag.Id);
+          }
+          return data;
+        };
+      })(this));
+      this.addNewRecipe = (function(_this) {
+        return function() {
+          return $.ajax({
+            type: 'POST',
+            url: '/maintain/new/recipe',
+            data: $('#newRecipeForm').serialize(),
+            success: function(data, textStatus, jqXHR) {
+              _this.recipeToAdd.id = textStatus;
+              _this.recipeToAdd.updateNameStatus = ko.observable(0);
+              _this.recipeToAdd.updateDescriptionStatus = ko.observable(0);
+              _this.recipes.push(_this.recipeToAdd);
+              _this.recipeToAdd = new Recipe();
+              _this.errorMessage('');
+              return $('#addRecipeModal').modal('hide');
+            },
+            error: function(jqXHR) {
+              return _this.errorMessage("Unable to add the recipe. Error code " + jqXHR.status + ", " + jqXHR.responseText);
+            }
+          });
         };
       })(this);
       _updateRecipeName = (function(_this) {

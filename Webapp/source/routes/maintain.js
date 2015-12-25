@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 router.put('/maintain/recipe/:id/name/:data', function(req, res) {
   var data = req.params.data
   if(data === 'null') {
-    statusCallback(400, 'The name cannot be empty', res)
+    statusCallback(400, 'The name cannot be empty', res);
   } else {
     recipeDao.updateName(req.params.id, data, statusCallback, res);
   }
@@ -20,7 +20,7 @@ router.put('/maintain/recipe/:id/name/:data', function(req, res) {
 router.put('/maintain/recipe/:id/descr/:data', function(req, res) {
   var data = req.params.data
   if(data === 'null'){
-    data = ''
+    data = '';
   }
   recipeDao.updateDescription(req.params.id, data, statusCallback, res);
 })
@@ -33,11 +33,27 @@ router.delete('/maintain/recipe/:id/:tagId', function(req, res) {
      tagDao.removeTagFromRecipe(req.params.tagId, req.params.id, statusCallback, res);
 })
 
+router.post('/maintain/new/recipe', function(req, res) {
+    var name = req.body.name;
+    var description = req.body.description;
+    var tags = JSON.parse('[' + req.body.tags + ']');
+
+    recipeDao.doesRecipeExist(name, function(result){
+        if (result) {
+            statusCallback(400, "Recipe name is already used, please choose another name.", res);
+        } else {
+            recipeDao.insertRecipe(name, description, tags, statusCallback, res);
+        }
+    })
+})
+
 var recipeCallback = function(data, res) {
   res.json(data)
 }
 
 var statusCallback = function(statusCode, message, res) {
+    console.log(statusCode)
+    console.log(message)
     res.status(statusCode).send(message)
 }
 

@@ -97,7 +97,52 @@ function updateName(id, data, callback, res) {
     });
 }
 
+function insertRecipe(name, description, tags, callback, res) {
+    var client = new pg.Client(conString);
+
+    client.connect(function(err) {
+      if(err) {
+        callback(500, "could not connect to the database", res);
+        return console.error('could not connect to database', err);
+      }
+      client.query('INSERT INTO "Recipe" (name, description) VALUES ( \'' + name + '\',\'' + description + '\') RETURNING id', function(err, result) {
+        if(err) {
+          callback(500, "error running recipe insert query", res);
+          return console.error('error running recipe insert query', err);
+        }
+        client.end();
+        insertTags(result.rows[0].id, tags, callback, res);
+      });
+    });
+}
+
+function insertTags(recipeId, tags, callback, res) {
+    tags.forEach(function(tagId){
+        console.info("inserting tagId: " + tagId + " to recipeId: " + recipeId)
+        tagDao.addTagToRecipe(tagId, recipeId, function(){}, res);
+    })
+    callback(200, String(recipeId), res);
+}
+
+function doesRecipeExist(name, callback) {
+    var client = new pg.Client(conString);
+
+    client.connect(function(err) {
+      if(err) {
+        return console.error('could not connect to postgres', err);
+      }
+      client.query('SELECT name FROM "Recipe" where name = \'' + name + '\'', function(err, result) {
+        if(err) {
+          return console.error('error running query', err);
+        }
+        client.end();
+        callback(result.rows.length > 0);
+      });
+    });
+}
 
 module.exports.loadAllRecipes = loadAllRecipes;
 module.exports.updateName = updateName;
 module.exports.updateDescription = updateDescription;
+module.exports.insertRecipe = insertRecipe;
+module.exports.doesRecipeExist = doesRecipeExist;
