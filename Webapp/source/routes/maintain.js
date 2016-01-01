@@ -47,13 +47,23 @@ router.post('/maintain/new/recipe', function(req, res) {
     })
 })
 
+router.post('/maintain/new/tag', function(req, res) {
+    var name = req.body.name;
+
+    tagDao.doesTagExist(name, function(result){
+        if (result) {
+            statusCallback(400, "Tag name is already used, please choose another name.", res);
+        } else {
+            tagDao.insertTag(name, statusCallback, res);
+        }
+    })
+})
+
 var recipeCallback = function(data, res) {
   res.json(data)
 }
 
 var statusCallback = function(statusCode, message, res) {
-    console.log(statusCode)
-    console.log(message)
     res.status(statusCode).send(message)
 }
 

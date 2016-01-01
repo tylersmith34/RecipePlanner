@@ -15,6 +15,7 @@ class Recipes.Maintain
     @recipeToAdd = new Recipe()
     @revertingNameValue = ko.observable(false)
     @errorMessage = ko.observable()
+    @tagNameToAdd = ko.observable()
 
     @load = ->
       $.get "/plan/recipes", (recipeResponse) =>
@@ -106,12 +107,27 @@ class Recipes.Maintain
         error:  (jqXHR) =>
           @errorMessage("Unable to add the recipe. Error code #{jqXHR.status}, #{jqXHR.responseText}")
 
+    @addNewTag = () =>
+      $.ajax
+        type: 'POST'
+        url: '/maintain/new/tag'
+        data: $('#newTagForm').serialize()
+        success: (data, textStatus, jqXHR) =>
+          @errorMessage('')
+          @tagNameToAdd('')
+          $('#addTagModal').modal('hide')
+          $.get "/plan/recipes/tags", (tagResponse) =>
+            tag.visible = ko.observable(yes) for tag in tagResponse
+            @tags(tagResponse)
+        error:  (jqXHR) =>
+          @errorMessage("Unable to add the tag. Error code #{jqXHR.status}, #{jqXHR.responseText}")
+
     _updateRecipeName = (recipe) =>
       recipe.updateNameStatus(0)
       if @revertingNameValue() is no and recipe.Name() isnt null
         name = if recipe.Name() then recipe.Name() else null
         $.ajax
-          type: 'PUT'-
+          type: 'PUT'
           url: "/maintain/recipe/#{recipe.Id}/name/#{name}"
           success: (data, textStatus, jqXHR) ->
             _processRecipePutResponse(jqXHR, recipe.updateNameStatus)

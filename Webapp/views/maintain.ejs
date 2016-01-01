@@ -9,6 +9,12 @@
 
 <div class="tab-content">
     <div id="tagsMaintenance" class="tab-pane" role="tabpanel">
+        <div class="panel-body">
+            <a href="#" data-toggle="modal" data-target="#addTagModal" >Add a new tag</a>
+        </div>
+        <div style="width: 50%" class="panel-body list-group" data-bind="foreach: {data: $root.tags, as: 'tag'}">
+            <div class="list-group-item"><span data-bind="text: tag.Name"></span></div>
+        </div>
     </div>
 
     <div id="recipesMaintenance" class="tab tab-pane active panel-default" role="tabpanel">
@@ -80,43 +86,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="addRecipeModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <button type="button" class="close" data-bind="click: $root.cancelAddingNewRecipe" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Add New Recipe</h4>
-        </div>
-        <div class="modal-body">
-            <div class="alert alert-danger" role="alert" data-bind="text: $root.errorMessage, visible: $root.errorMessage()">
-            </div>
-            <form id="newRecipeForm" method="Post" action="maintain/new/recipe">
-                <div class="form-group">
-                    <div>
-                        <label for="recipeToAddName">Name</label>
-                        <input name="name" id ="recipeToAddName" data-bind="value: $root.recipeToAdd.Name" class="form-control name-field"></input>
-                    </div>
-                    <div>
-                        <label for"recipeToAddDescr">Description</label>
-                        <input name="description" id="recipeToAddDescr" type="text" data-bind="value: $root.recipeToAdd.Description" class="form-control description-field"></input>
-                    </div>
-                </div>
-                <label>Tags</label>
-                <div data-bind="foreach: {data: $root.recipeToAdd.Tags, as: 'tag'}">
-                    <span class="selected-tag" data-bind="text: tag.Name, click: function(){$root.removeTagFromNewRecipe(tag)}"></span>
-                </div>
-                <input name="tags" type="hidden" data-bind="value: $root.tagsForNewRecipe"></input>
-                <div class="list-group tagList" data-bind="foreach: {data: $root.tags, as: 'tag'}">
-                    <a href="#" class="list-group-item" data-bind="visible: tag.visible, text: tag.Name, css: {'active': tag.selected}, click: function(){$root.selectTagForNewRecipe(tag)}"></a>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-bind="click: $root.cancelAddingNewRecipe" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" data-bind="click: $root.addNewRecipe">Save</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+<% include ../views/partials/addRecipeModal %>
+<% include ../views/partials/addTagModal %>
 
 <script src="/generated/js/maintain/maintain-view-model.js"></script>

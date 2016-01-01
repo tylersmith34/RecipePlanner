@@ -56,6 +56,42 @@ function addTagToRecipe(tagId, recipeId, callback, res) {
     });
 }
 
+function doesTagExist(name, callback) {
+    var client = new pg.Client(conString);
+
+    client.connect(function(err) {
+      if(err) {
+        return console.error('could not connect to postgres', err);
+      }
+      client.query('SELECT name FROM "Tag" where name = \'' + name + '\'', function(err, result) {
+        if(err) {
+          return console.error('error running query', err);
+        }
+        client.end();
+        callback(result.rows.length > 0);
+      });
+    });
+}
+
+function insertTag(name, callback, res) {
+    var client = new pg.Client(conString);
+
+    client.connect(function(err) {
+      if(err) {
+        callback(500, "could not connect to the database", res);
+        return console.error('could not connect to database', err);
+      }
+      client.query('INSERT INTO "Tag" (name) VALUES ( \'' + name + '\') RETURNING id', function(err, result) {
+        if(err) {
+          callback(500, "error running tag insert query", res);
+          return console.error('error running tag insert query', err);
+        }
+        client.end();
+        callback(200, String(result.rows[0].id), res);
+      });
+    });
+}
+
 function mapRows(tags){
     var mappedTags = [];
     for (tag of tags){
@@ -67,3 +103,5 @@ function mapRows(tags){
 module.exports.loadTags = loadTags;
 module.exports.addTagToRecipe = addTagToRecipe;
 module.exports.removeTagFromRecipe = removeTagFromRecipe;
+module.exports.doesTagExist = doesTagExist;
+module.exports.insertTag = insertTag;

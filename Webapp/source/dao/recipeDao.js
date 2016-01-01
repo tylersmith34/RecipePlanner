@@ -12,7 +12,7 @@ function loadAllRecipes(callback, callbackRes) {
       }
       client.query('SELECT r.id, r.name, r.description, t.id as tagId, t.name as tagName FROM "Recipe" r ' +
       'join "RecipeTags" rt on rt."RecipeId" = r.id ' +
-      'join "Tag" t on rt."TagId" = t.id order by r.id', function(err, result) {
+      'join "Tag" t on rt."TagId" = t.id ORDER BY r.name', function(err, result) {
         if(err) {
           return console.error('error running query', err);
         }

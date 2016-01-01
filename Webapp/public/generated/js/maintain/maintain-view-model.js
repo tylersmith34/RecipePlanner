@@ -28,6 +28,7 @@
       this.recipeToAdd = new Recipe();
       this.revertingNameValue = ko.observable(false);
       this.errorMessage = ko.observable();
+      this.tagNameToAdd = ko.observable();
       this.load = function() {
         $.get("/plan/recipes", (function(_this) {
           return function(recipeResponse) {
@@ -210,6 +211,31 @@
             },
             error: function(jqXHR) {
               return _this.errorMessage("Unable to add the recipe. Error code " + jqXHR.status + ", " + jqXHR.responseText);
+            }
+          });
+        };
+      })(this);
+      this.addNewTag = (function(_this) {
+        return function() {
+          return $.ajax({
+            type: 'POST',
+            url: '/maintain/new/tag',
+            data: $('#newTagForm').serialize(),
+            success: function(data, textStatus, jqXHR) {
+              _this.errorMessage('');
+              _this.tagNameToAdd('');
+              $('#addTagModal').modal('hide');
+              return $.get("/plan/recipes/tags", function(tagResponse) {
+                var i, len, tag;
+                for (i = 0, len = tagResponse.length; i < len; i++) {
+                  tag = tagResponse[i];
+                  tag.visible = ko.observable(true);
+                }
+                return _this.tags(tagResponse);
+              });
+            },
+            error: function(jqXHR) {
+              return _this.errorMessage("Unable to add the tag. Error code " + jqXHR.status + ", " + jqXHR.responseText);
             }
           });
         };
