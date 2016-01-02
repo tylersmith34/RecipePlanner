@@ -11,8 +11,8 @@ function loadAllRecipes(callback, callbackRes) {
         return console.error('could not connect to postgres', err);
       }
       client.query('SELECT r.id, r.name, r.description, t.id as tagId, t.name as tagName FROM "Recipe" r ' +
-      'join "RecipeTags" rt on rt."RecipeId" = r.id ' +
-      'join "Tag" t on rt."TagId" = t.id ORDER BY r.name', function(err, result) {
+      'LEFT JOIN "RecipeTags" rt ON rt."RecipeId" = r.id ' +
+      'LEFT JOIN "Tag" t ON rt."TagId" = t.id ORDER BY r.name', function(err, result) {
         if(err) {
           return console.error('error running query', err);
         }
